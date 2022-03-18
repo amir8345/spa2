@@ -13,6 +13,8 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.baseURL = 'http://localhost:3000/api';
+
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
