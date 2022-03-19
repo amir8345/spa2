@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Providers\SmsIR_UltraFastSend;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class SignupController extends Controller
 {
@@ -14,7 +17,7 @@ class SignupController extends Controller
         $code = rand(10000 , 99999);
         $mobile = $request->mobile;
 
-        session(['code' => $code]);
+        session(['code' => $code , 'mobile' => $mobile]);
 
         $this->sendSMS($mobile , $code);
         // return $code;
@@ -56,7 +59,14 @@ class SignupController extends Controller
 
     public function set_username_password(Request $request)
     {
-        return $request->username . ' ' . $request->password . ' ' . $request->repassword;
+       $id = DB::table('users')->insertGetId([
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'mobile' => session('mobile')
+        ]);
+
+        Auth::loginUsingId($id);
+
     }
     
 }

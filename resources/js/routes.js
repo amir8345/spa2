@@ -4,6 +4,7 @@ import Books from "./components/Books";
 import mobileEmail from "./components/signup/mobileEmail";
 import codeVerification from "./components/signup/codeVerification";
 import setUsernamePassword from "./components/signup/setUsernamePassword";
+import Profile from "./components/Profile";
 
 export default [
     {
@@ -25,5 +26,9 @@ export default [
     {
         path: '/set-username-password',
         component: setUsernamePassword
+    },
+    {
+        path: '/profile',
+        component: Profile
     }
 ]

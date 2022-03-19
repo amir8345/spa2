@@ -30,7 +30,7 @@ export default {
                 data: this.usernamePassword
             })
             .then(res => {
-                console.log(res.data);
+                this.$router.push('/profile');
             })
         }
     }
