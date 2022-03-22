@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Providers\SmsIR_UltraFastSend;
 
 class LoginController extends Controller
@@ -13,12 +14,10 @@ class LoginController extends Controller
     public $mobile_email;
     public $kind;
 
-    public function __construct()
+    public function define_kind_and_mobile_email()
     {
-        
-        $this->kind = session('kind');
-
         $this->mobile_email = session('mobile');
+        $this->kind = session('kind');
 
         if(! session('mobile')) {
             $this->mobile_email = session('email');
@@ -32,8 +31,7 @@ class LoginController extends Controller
         $this->is_user_input_mobile_or_email($request);
 
         if ($this->IS_new_user()) {
-            $this->send_virificaion_code();
-            return;
+            return 'new_user';
         }
 
         return 'not_new_user';
@@ -53,24 +51,24 @@ class LoginController extends Controller
 
     public function IS_new_user()
     {
-        
-      
+        $this->define_kind_and_mobile_email();
 
         if (User::where($this->kind , $this->mobile_email)->exists()) {
             return false;
         }
 
         return true;
-    
     }
     
     
-    public function send_virificaion_code()
+    public function send_virification_code()
     {
-
+        
+        $this->define_kind_and_mobile_email();
+        
         $code = rand(10000, 99999);
-
         session('code' , $code);
+        dd($this->mobile_email);
 
         if($this->mobile_email == 'mobile') {
 
@@ -104,12 +102,12 @@ class LoginController extends Controller
     public function check_verificaion_code(Request $request)
     {
 
-        if ($request->code == session('code')) {
-            session('code_virified' , true);
-            return 'true';
-        } else {
-            return session('mobile');
+        if (! $request->code == session('code')) {
+            return 'wrong_code';
         }
+
+        session('code_verified' , true);
+        return 'right_code';
 
     }
 
@@ -120,6 +118,7 @@ class LoginController extends Controller
             return;
         }
 
+        $this->define_kind_and_mobile_email();
 
         $id = User::insertGetId([
             $this->kind => $this->mobile_email,
@@ -131,29 +130,61 @@ class LoginController extends Controller
             return 'authentication successfull';
         }
 
-        
-
     }
 
 
     public function passowrd_check(Request $request)
     {
+
+        $this->define_kind_and_mobile_email();
         
-        if ($user = User::where([
+        if (! $user = User::where([
             [ $this->kind , '=' , $this->mobile_email],
             [ 'password', '=' , $request->passowrd ]
         ])->exists()) {
+            return 'wrong password';
+        }
+        
+        if(Auth::login($user)) {
+            return 'authentication successfull';
+        }
+    }
 
-            return Auth::login($user);
+    public function update_password(Request $request)
+    {
+        if (! session('code_virified')) {
+            return 'code has not verified yet';
+        }
+
+        if(! $request->password == $request->repassword) {
+            return 'passwords do not match';
+        }
+
+        $this->define_kind_and_mobile_email();
+
+        if ($user =  User::where($this->kind , $this->mobile_email)
+        ->update(['password' => Hash::make($request->passowrd) ])) {
+            Auth::login($user);
+            return 'password updated successfully';
         }
 
     }
 
-    public function update_password()
+
+    public function login_with_disposable_code(Request $request)
     {
+        if (! $request->code == session('code')) {
+            return;
+        }
+
+        $this->define_kind_and_mobile_email();
+
+        $user = User::where($this->kind , $this->mobile_email)->get();
+
+        if (Auth::login($user)) {
+            return 'authentication successfull';
+        }
         
     }
-
-
 
 }
