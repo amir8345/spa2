@@ -12,6 +12,7 @@
        <nav>
            <router-link to="/">home</router-link>
            <router-link to="/books">books</router-link>
+           <router-link to="/login">login</router-link>
        </nav>
 
         <router-view></router-view>

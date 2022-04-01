@@ -1,6 +1,7 @@
 <template>
   <div>
       books
+      {{ $store.state.name }}
   </div>
 </template>
 

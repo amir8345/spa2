@@ -22,55 +22,54 @@ class LoginController extends Controller
         if(! session('mobile')) {
             $this->mobile_email = session('email');
         }
-    }
-
-
-    public function login(Request $request)
-    {
-
-        $this->is_user_input_mobile_or_email($request);
-
-        if ($this->IS_new_user()) {
-            return 'new_user';
-        }
-
-        return 'not_new_user';
 
     }
+
 
     public function is_user_input_mobile_or_email($request)
     {
-        if(strlen($request->input) == 11){
-            session(['kind' => 'mobile' , 'mobile' => $request->input]);
+        if(strlen($request->mobile_email) == 11){
+            session(['kind' => 'mobile' , 'mobile' => $request->mobile_email]);
             return;
         }
 
-        session(['kind' => 'email' , 'email' => $request->input]);
+        session(['kind' => 'email' , 'email' => $request->mobile_email]);
     }
-    
 
+    
     public function IS_new_user()
     {
         $this->define_kind_and_mobile_email();
-
+        
         if (User::where($this->kind , $this->mobile_email)->exists()) {
             return false;
         }
-
+        
         return true;
     }
     
-    
-    public function send_virification_code()
+    public function login(Request $request)
     {
+        session(['cod' => 'fsd']);
+        // $request->session()->regenerate();
         
-        $this->define_kind_and_mobile_email();
-        
-        $code = rand(10000, 99999);
-        session('code' , $code);
-        dd($this->mobile_email);
 
-        if($this->mobile_email == 'mobile') {
+        // $this->is_user_input_mobile_or_email($request);
+
+        // if ($this->IS_new_user()) {
+        //     return $this->send_virification_code($request);
+        // }
+
+        // return 'not new user';
+    }
+    
+    public function send_virification_code($request)
+    {
+
+        $code = rand(10000, 99999);
+        session(['code' => $code]);
+
+        if($this->kind == 'mobile') {
 
             date_default_timezone_set("Asia/Tehran");
 
@@ -93,7 +92,7 @@ class LoginController extends Controller
 
             $SmsIR_UltraFastSend = new SmsIR_UltraFastSend($APIKey, $SecretKey, $APIURL);
             $UltraFastSend = $SmsIR_UltraFastSend->ultraFastSend($data);
-            var_dump($UltraFastSend);
+            return $UltraFastSend;
         
         }
 
@@ -101,13 +100,14 @@ class LoginController extends Controller
 
     public function check_verificaion_code(Request $request)
     {
+        return session('cod');
+        // return session('mobile');
+        // if (! $request->code == session('code')) {
+        //     return 'wrong code';
+        // }
 
-        if (! $request->code == session('code')) {
-            return 'wrong_code';
-        }
-
-        session('code_verified' , true);
-        return 'right_code';
+        // session('code_verified' , true);
+        // return 'right code';
 
     }
 
@@ -127,7 +127,7 @@ class LoginController extends Controller
         ]);
 
         if(Auth::loginUsingId($id)){
-            return 'authentication successfull';
+            return 'authentication_successfull';
         }
 
     }

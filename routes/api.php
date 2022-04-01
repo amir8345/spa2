@@ -4,7 +4,6 @@ use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login' , [LoginController::class , 'login']);
-Route::get('/login/send_virification_code' , [LoginController::class , 'send_virification_code']);
 Route::post('/login/check_verificaion_code' , [LoginController::class , 'check_verificaion_code']);
 Route::post('/login/set_username_password' , [LoginController::class , 'set_username_and_password']);
 Route::post('/login/password_check' , [LoginController::class , 'password_check']);
