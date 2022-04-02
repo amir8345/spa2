@@ -12,7 +12,8 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-     mobile_email: ''
+     mobile_email: '',
+     demanding_page: ''
     },
   })
 

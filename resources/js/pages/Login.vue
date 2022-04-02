@@ -26,12 +26,15 @@ methods: {
             }
         })
         .then(res => {
-            console.log(res.data);
-            
-            if(res.data == ' your verification code is sent') {
+            if(res.data == 'new user') {
                 this.$store.state.mobile_email = this.mobile_email;
-                this.$router.push('/code_verification')
+                this.$store.state.demanding_page = 'login';
 
+                this.$router.push('/login/code_verification')
+            }
+
+            if (res.data == 'already a user') {
+                this.$router.push('/login/password_check')
             }
         })
     }
