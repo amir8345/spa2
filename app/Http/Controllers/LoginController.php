@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Providers\SmsIR_UltraFastSend;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
@@ -35,7 +36,7 @@ class LoginController extends Controller
     
     public function login(Request $request)
     {
-        
+
         $this->is_user_input_mobile_or_email($request);
         
         if ($this->IS_new_user()) {

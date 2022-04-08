@@ -10,7 +10,9 @@
         "laravel/framework": "^9.2",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
-        "laravel/ui": "^3.4"
+        "laravel/ui": "^3.4",
+        "nesbot/carbon": "^2.57",
+        "symfony/dom-crawler": "^6.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

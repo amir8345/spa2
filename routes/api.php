@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CrawlerController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,3 +16,7 @@ Route::get('/login/logout' , [LoginController::class , 'logout']);
 Route::middleware('auth:sanctum')->get('/profile' , function(){
     return 'profile page';
 });
+
+
+Route::get('/crawl' , [CrawlerController::class , 'extract_resource_urls']);
+
