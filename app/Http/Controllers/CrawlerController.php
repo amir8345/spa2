@@ -11,6 +11,8 @@ use Symfony\Component\DomCrawler\Crawler;
 class CrawlerController extends Controller
 {
 
+    public $resource;
+    public $new_books;
     
     /**
      * extract resource urls that need to be crawled
@@ -21,42 +23,65 @@ class CrawlerController extends Controller
     {
         // TODO change $website after main crawl is done
         // TODO it has to get recource urls based on last crawled time
+        // ! this fuctios is getting just one resource URL every minute
 
         $website = DB::table('book_resource_urls')
         ->orderByDesc('created_at')
         ->first();
+
+        $url = str_replace(['{var1}' , '{var2}'] , [$website->var1 , $website->var2] , $website->url);
         
-        $resources[] = [ 'url' => $website->url . strval($website->num) ,
-                         'body' => ''                           
-                        ];
-        $this->crawl_resource_urls($resources);
+        $this->resource['url'] = $url;
+        $this->resource['website'] = $website->website;
+        $this->resource['filter'] = $website->filter;
+        
+        $this->crawl_resource();
 
     }
     
     /**
      * crawl resource urls and add body to resources[]
      *
-     * @param  array $resources
+     * @param  array $resource
      * @return void
      */
-    public function crawl_resource_urls(array $resources)
+    public function crawl_resource()
     {
-        foreach ($resources as $key => $resource) {
-            $body = $this->send_http_request($resource['url']);
-            $resources[$key]['body'] = $body;
-        }
+        $this->resource['body'] = $this->send_http_request($this->resource['url']);
+        $this->extract_new_books();
+
     }
     
     /**
      * extract list of new books that need to be crawled form reosurce page
      *
-     * @param  string $body
+     * @param  string $body , $filter
      * @return array $new_books
      */
-    public function extract_new_books_form_resource_body(string $resource_body)
+    public function extract_new_books()
+    {
+        $crawler = new Crawler($this->resource['body']);
+        $new_books_urls = $crawler->filter($this->resource['filter'])->extract(['href']);
+
+        foreach ($new_books_urls as $key => $url) {
+            $this->new_books[$key]['book_id'] = $this->get_book_id();
+            $this->new_books[$key]['website'] = $this->resource['website'] ;
+            $this->new_books[$key]['url'] = $url ;
+        } 
+
+
+
+
+        $this->send_data_to_database($this->new_books , 'book_urls');
+
+    }
+
+
+    public function remove_existing_boos()
     {
         # code...
     }
+  
         
     /**
      * crawl book page
@@ -131,20 +156,21 @@ class CrawlerController extends Controller
      */
     public function send_data_to_database(array $data , string $table_name)
     {
+
+        DB::table($table_name)->insert($data);
         
     }
 
     
     /**
-     * insert_empty_row_to_book_table_and_return_book_id
+     * insert empty row to book table and return book id
      *
      * @return string $book_id
      */
-    public function insert_empty_row_to_book_table_and_return_book_id()
+    public function get_book_id()
     {
-        
+        return Book::insertGetId(['title' => '']);
     }
-
 
 
 

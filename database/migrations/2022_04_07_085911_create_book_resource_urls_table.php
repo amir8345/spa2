@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('website');
             $table->string('url');
-            $table->integer('num')->default(1);
+            $table->string('var1')->nullable();
+            $table->string('var2')->nullable();
+            $table->string('crawler_filter')->nullable();
             $table->timestamp('last_crawled_at')->default(NULL);
             $table->timestamps();
         });
