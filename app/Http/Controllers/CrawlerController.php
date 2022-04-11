@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\ResourceTag;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -12,33 +13,18 @@ use Symfony\Component\DomCrawler\Crawler;
 class CrawlerController extends Controller
 {
     
-    public $resource;
-    public $resource_url;
-    public $resource_body;
-    public $new_books;
     
     /**
     * extract resource urls that need to be crawled
     *
     * @return array
     */
-    public function extract_resource_urls()
+    public function extract_resource()
     {
-        // TODO change $website after main crawl is done
-        // TODO it has to get recource urls based on last crawled time
-        // ! this fuctios is getting just one resource URL every minute
-        
 
 
-        $this->resource = DB::table('book_resource_urls')
-        ->orderByDesc('created_at')
-        ->first();
+        $resource_tag = ResourceTag::orderByDesc('last_crawled_at')->first();
 
-        $this->resource_url = str_replace(
-                                ['{var1}' , '{var2}'] , 
-                                [ $this->resource['var1'] , $this->resource['var2'] ] , 
-                                $this->resource['url']
-                            );
         
         $this->crawl_resource();
         

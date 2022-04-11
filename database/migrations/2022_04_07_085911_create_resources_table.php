@@ -13,15 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('book_resource_urls', function (Blueprint $table) {
+        Schema::create('resources', function (Blueprint $table) {
             $table->id();
-            $table->string('website');
+            $table->string('name');
             $table->string('url');
-            $table->string('var1')->nullable();
-            $table->string('var2')->nullable();
-            $table->string('crawler_filter')->nullable();
-            $table->timestamp('last_crawled_at')->default(NULL);
-            $table->timestamps();
         });
     }
 

@@ -18,5 +18,5 @@ Route::middleware('auth:sanctum')->get('/profile' , function(){
 });
 
 
-Route::get('/crawl' , [CrawlerController::class , 'extract_resource_urls']);
+Route::get('/crawl' , [CrawlerController::class , 'extract_resource']);
 
