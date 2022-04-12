@@ -9,6 +9,10 @@ class ResourceTag extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'last_crawled_at',
+    ];
+
 
     public function resource()
     {

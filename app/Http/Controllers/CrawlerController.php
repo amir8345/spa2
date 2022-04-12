@@ -13,6 +13,9 @@ use Symfony\Component\DomCrawler\Crawler;
 class CrawlerController extends Controller
 {
     
+    public $resource_tag;
+    public $resource_url;
+    public $resource_body;
     
     /**
     * extract resource urls that need to be crawled
@@ -22,9 +25,9 @@ class CrawlerController extends Controller
     public function extract_resource()
     {
 
+        $this->resource_tag = ResourceTag::orderByDesc('last_crawled_at')->first();
 
-        $resource_tag = ResourceTag::orderByDesc('last_crawled_at')->first();
-
+        $this->resource_url = str_replace(['{tag}' , '{num}'] , [$this->resource_tag['tag'] , $this->resource_tag['num']] , $this->resource_tag->resource->url );
         
         $this->crawl_resource();
         
@@ -51,9 +54,10 @@ class CrawlerController extends Controller
     public function extract_new_books_and_insert_them()
     {
         $crawler = new Crawler($this->resource_body);
-        $new_books_urls = $crawler->filter($this->resource['filter'])->extract(['href']);
-        
+        $new_books_urls = $crawler->filter($this->resource_tag['filter'])->extract(['href']);
+
         $new_books_counter = 0;
+       
 
         foreach ($new_books_urls as $url) {
             
@@ -61,30 +65,29 @@ class CrawlerController extends Controller
 
                 DB::table('book_urls')->insert([
                     'book_id' => $this->get_book_id(),
-                    'website' => $this->resource['website'],
+                    'url_name' => $this->resource_tag->resource->name,
                     'url' => $url,
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
 
-                $new_books_counter ++ ;
+                $new_books_counter ++;
             }
 
         }
 
             if ($new_books_counter > count($new_books_urls) / 2 ) {
                 
-                $update_array = [ 'var2' => $this->resource['var2'] + 1 ];
+                $update_array = [ 'num' => $this->resource_tag['num'] + 1 ];
                 
             } else {
                 
                 $update_array = [ 'last_crawled_at' => now() ];
             }
 
-            DB::table('book_resource_urls')
-            ->find($this->resource['id'])
+            DB::table('resource_tags')
+            ->where('id' , $this->resource_tag['id'])
             ->update($update_array);
-
                 
     }
             

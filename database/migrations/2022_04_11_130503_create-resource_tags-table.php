@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('num');
             $table->string('filter');
             $table->timestamp('last_crawled_at');
+            $table->timestamps();
         });
     }
 
