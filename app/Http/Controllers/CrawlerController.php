@@ -16,6 +16,7 @@ class CrawlerController extends Controller
     public $resource_tag;
     public $resource_url;
     public $resource_body;
+    public $new_books;
     
     /**
     * extract resource urls that need to be crawled
@@ -32,6 +33,8 @@ class CrawlerController extends Controller
         $this->crawl_resource();
         
     }
+
+
     
     /**
     * crawl resource urls and add body to resources[]
@@ -45,6 +48,8 @@ class CrawlerController extends Controller
         $this->extract_new_books_and_insert_them();
     }
     
+
+
     /**
     * extract list of new books that need to be crawled form reosurce page
     *
@@ -54,17 +59,20 @@ class CrawlerController extends Controller
     public function extract_new_books_and_insert_them()
     {
         $crawler = new Crawler($this->resource_body);
-        $new_books_urls = $crawler->filter($this->resource_tag['filter'])->extract(['href']);
+        $extracted_books_urls = $crawler->filter($this->resource_tag['filter'])->extract(['href']);
 
         $new_books_counter = 0;
        
-
-        foreach ($new_books_urls as $url) {
+        foreach ($extracted_books_urls as $key => $url) {
             
             if ( DB::table('book_urls')->where('url' , $url)->doesntExist() ) {
 
+                $book_id = $this->get_book_id();
+                $this->new_books[$key]['id'] = $book_id;
+                $this->new_books[$key]['url'] = $url;
+
                 DB::table('book_urls')->insert([
-                    'book_id' => $this->get_book_id(),
+                    'book_id' => $book_id,
                     'url_name' => $this->resource_tag->resource->name,
                     'url' => $url,
                     'created_at' => now(),
@@ -76,22 +84,26 @@ class CrawlerController extends Controller
 
         }
 
-            if ($new_books_counter > count($new_books_urls) / 2 ) {
-                
+            $update_array = [ 'last_crawled_at' => now() ];
+
+            if ($new_books_counter > count($extracted_books_urls) / 2 ) {
                 $update_array = [ 'num' => $this->resource_tag['num'] + 1 ];
-                
-            } else {
-                
-                $update_array = [ 'last_crawled_at' => now() ];
             }
 
+            $this->update_resource_tag($update_array);
+            $this->crawl_new_books();
+            
+        }
+        
+        
+        
+        public function update_resource_tag(array $update_array)
+        {
             DB::table('resource_tags')
             ->where('id' , $this->resource_tag['id'])
             ->update($update_array);
-                
-    }
-            
-            
+        }
+
             
             /**
             * crawl book page
@@ -99,23 +111,78 @@ class CrawlerController extends Controller
             * @param string $url
             * @return void
             */
-            public function crawl_book_url(string $url)
+            public function crawl_new_books()
             {
-                
+
+                foreach ($this->new_books as $key => $new_book) {
+                    
+                    $body = $this->send_http_request($new_book['url']);
+                    $crawler = new Crawler($body);
+
+                    $filters = DB::table('resource_book_crawl_filters')
+                    ->where('resource_id' , $this->resource_tag['resource_id'])
+                    ->first();
+
+                    $details = [ 'title', 'title2', 'lang', 'age', 'city', 'isbn', 
+                    'format', 'size', 'weight', 'cover', 'paper', 'pages', 'colorful', 
+                    'binding', 'about', ];
+
+
+                    foreach ($details as $detail)    {
+                        if ( !empty($filters->$detail) ) {
+                            $book_details[$detail] = $crawler->filter($filters->$detail)->text('');
+                        }
+                    }
+
+
+                    dd($book_details);
+
+                    $book_publishes = [
+                        'nobat' => $crawler->filter($filters->nobat)->text(''),
+                        'year' => $crawler->filter($filters->year)->text(''),
+                        'month' => $crawler->filter($filters->month)->text(''),
+                        'date' => $crawler->filter($filters->date)->text(''),
+                        'number' => $crawler->filter($filters->number)->text(''),
+                    ];
+
+                    $book_original_title = [
+                        'title' => $crawler->filter($filters->original)->text('')
+                    ];
+                    
+                    $book_urls = [
+                        [
+                            'url_name' => 'amazon' , 
+                            'url' => $crawler->filter($filters->url_amazon)->link()->getUri(),
+                        ],
+                        [
+                            'url_name' => 'fidibo' , 
+                            'url' => $crawler->filter($filters->url_fidibo)->link()->getUri(),
+                        ],
+                        [
+                            'url_name' => 'content' , 
+                            'url' => $crawler->filter($filters->url_content)->link()->getUri(),
+                        ],
+                        [
+                            'url_name' => 'preface' , 
+                            'url' => $crawler->filter($filters->url_preface)->link()->getUri(),
+                        ],
+                        
+                    ];
+
+                    foreach ($crawler->filter($filters->tag) as $tag) {
+                        $book_tags[] = [
+                            'book_id' => $new_book['id'],
+                            'tag' => $tag->nodeValue,
+                            'website' => $this->resource_tag['name']
+                        ];
+                    }
+
+
+                }
+
             }
             
             
-            /**
-            * extract book details from book page 
-            * e.g. title - isbn - pages etc
-            *
-            * @param  mixed $body
-            * @return array $book_details
-            */
-            public function extract_book_details_from_book_page(string $body)
-            {
-                # code...
-            }
             
             /**
             * extract book urls from book page like 
