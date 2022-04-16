@@ -123,7 +123,9 @@ class CrawlerController extends Controller
             require(__DIR__ . '/../CrawlFilters/' . $this->resource_tag->resource->name . '.php');
             
             foreach ($responses as $key => $value) {
-                var_dump(book_details($responses[$key]->body()));
+                $book_details = book_details($responses[$key]->body() , $this->resource_tag->resource->name);
+                var_dump($book_tags = book_tags($responses[$key]->body()));
+                
             }
             
             
