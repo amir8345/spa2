@@ -13,7 +13,7 @@ function book_details(string $body , string $baseURI)
 
 
     // PAGES - COVER _ FORMAT
-    $array = $crawler->filter('tbody tr td')->extract(['_text']);
+    $array = $crawler->filter('#tab-description td')->extract(['_text']);
     
     foreach ($array as $key => $value) {
 
@@ -26,6 +26,7 @@ function book_details(string $body , string $baseURI)
         if ( strpos($value , 'جلد') !== false ) {
             $book_details['cover'] = $array[$key + 1];
         }
+       
 
     }  
 
@@ -90,6 +91,21 @@ function book_tags(string $body){
     unset($tags[count($tags)]);
     
     return $tags;
+}
+
+function book_publishes(string $body) {
+    
+    $crawler = new Crawler($body);
+
+    $array = $crawler->filter('#tab-description td')->extract(['_text']);
+    
+    foreach ($array as $key => $value) {
+
+        if ( strpos($value , 'نوبت' ) !== false ) {
+            return $book_publishes['nobat'] = $array[$key + 1];
+        }
+    }  
+
 }
 
 
