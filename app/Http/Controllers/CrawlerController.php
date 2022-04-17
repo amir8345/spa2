@@ -129,7 +129,6 @@ class CrawlerController extends Controller
                 $book_publishes = book_publishes($responses[$key]->body());
                 
                 $this->search_book_in_nl($book_details['title']);
-
             }
             
             
@@ -138,36 +137,18 @@ class CrawlerController extends Controller
         
         public function search_book_in_nl(string $title)
         {
-            $response = Http::post('https://opac.nlai.ir/opac-prod/search/bibliographicAdvancedSearchProcess.do;jsessionid=B6B550A31D518BF399381188E1486F8C', 
-            [
-                'advancedSearch.simpleSearch[0].indexFieldId' => 220885,
+
+            $res = Http::asForm()->post('https://opac.nlai.ir/opac-prod/search/bibliographicAdvancedSearchProcess.do' , [
                 'advancedSearch.simpleSearch[0].value' => $title,
-                'advancedSearch.simpleSearch[0].tokenized' => true,
-                'advancedSearch.operator[0]' => 0,
-                'advancedSearch.simpleSearch[1].indexFieldId' => 10070,
                 'advancedSearch.simpleSearch[1].value' => $this->resource_tag->resource->persian_name,
-                'advancedSearch.simpleSearch[1].tokenized' => true,
-                'advancedSearch.operator[1]' => 0,
-                'advancedSearch.simpleSearch[2].indexFieldId' => '',
-                'advancedSearch.simpleSearch[2].value' => '',
-                'advancedSearch.simpleSearch[2].tokenized' => true,
-                'nliHolding' => '',
-                'bibliographicLimitQueryBuilder.biblioDocType' => '',
-                'bibliographicLimitQueryBuilder.calendar' => '',
-                'bibliographicLimitQueryBuilder.from' => '',
-                'bibliographicLimitQueryBuilder.dateComparisonOperator' => 'eq',
-                'bibliographicLimitQueryBuilder.language' => '',
-                'bibliographicLimitQueryBuilder.codingLevel' => '',
-                'bibliographicLimitQueryBuilder.gmd' => '',
-                'command' => 'I',
                 'classType' => 0,
-                'pageStatus' => 1,
-                'bibliographicLimitQueryBuilder.useDateRange' => false,
-                'bibliographicLimitQueryBuilder.year' => '',
-                'attributes.locale' => 'fa',
+                'command' => 'I',
+                'advancedSearch.simpleSearch[0].tokenized' => true
             ]);
 
-            echo $response->body();
+            echo $res->body();
+
+
         }
 
 
