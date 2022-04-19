@@ -92,7 +92,7 @@ class CrawlerController extends Controller
                 $update_array = [ 'num' => $this->resource_tag['num'] + 1 ];
             }
             
-            // $this->update_resource_tag($update_array);
+        // $this->update_resource_tag($update_array);
             $this->crawl_new_books();
             
         }
@@ -129,6 +129,7 @@ class CrawlerController extends Controller
                 $book_publishes = book_publishes($responses[$key]->body());
                 
                 $this->search_book_in_nl($book_details['title']);
+                break;
             }
             
             
@@ -145,9 +146,40 @@ class CrawlerController extends Controller
                 'command' => 'I',
                 'advancedSearch.simpleSearch[0].tokenized' => true
             ]);
+            // echo $res->body();
 
-            echo $res->body();
+            $this->find_best_match_in_nl_search_result($res->body());
 
+        }
+
+
+        public function find_best_match_in_nl_search_result(string $body)
+        {
+            
+            $crawler = new Crawler($body);
+
+            $links = $crawler->filter('#table td a')->extract(['href']);
+
+            foreach ($links as $key => $link ) {
+                
+                $encoded_link = iconv("UTF-8", "ISO-8859-1" , $link);
+                
+                $search_result[] = [ 'link' => $encoded_link ]; 
+                
+            }
+            
+            $titles =  $crawler->filter('#table td')->extract(['_text']);
+            
+            foreach ($titles as $key => $title) {
+                $encoded_title = iconv("UTF-8", "ISO-8859-1" , $title);
+
+                if( strlen(trim( $encoded_title ) ) > 0 ) {
+                    
+                }
+
+            }
+            
+            print_r($encoded_titles);
 
         }
 
