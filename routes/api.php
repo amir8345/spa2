@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\CrawlerController;
-use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Crawler\BookResources;
 
 Route::post('/login' , [LoginController::class , 'login']);
 Route::get('/login/send_code' , [LoginController::class , 'send_code']);
@@ -18,5 +18,5 @@ Route::middleware('auth:sanctum')->get('/profile' , function(){
 });
 
 
-Route::get('/crawl' , [CrawlerController::class , 'extract_resource']);
+Route::get('/crawl' , [BookResources::class , 'extract_resource']);
 

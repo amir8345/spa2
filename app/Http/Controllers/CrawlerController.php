@@ -14,98 +14,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class CrawlerController extends Controller
 {
     
-    public $resource_tag;
-    public $resource_url;
-    public $resource_body;
-    public $new_books;
-    
-    
-    /**
-    * extract resource urls that need to be crawled
-    *
-    * @return array
-    */
-    public function extract_resource()
-    {
-        
-        $this->resource_tag = ResourceTag::orderByDesc('last_crawled_at')->first();
-        
-        $this->resource_url = str_replace(['{tag}' , '{num}'] , [$this->resource_tag['tag'] , $this->resource_tag['num']] , $this->resource_tag->resource->url );
-        
-        $this->crawl_resource();
-        
-    }
-    
-    
-    
-    /**
-    * crawl resource urls and add body to resources[]
-    *
-    * @param  array $resource
-    * @return void
-    */
-    public function crawl_resource()
-    {
-        $this->resource_body = $this->send_http_request($this->resource_url);
-        $this->extract_new_books_and_insert_them();
-    }
-    
-    
-    
-    /**
-    * extract list of new books that need to be crawled form reosurce page
-    *
-    * @param  string $body , $filter
-    * @return array $new_books
-    */
-    public function extract_new_books_and_insert_them()
-    {
-        $crawler = new Crawler($this->resource_body);
-        $extracted_books_urls = $crawler->filter($this->resource_tag['filter'])->extract(['href']);
-        
-        $new_books_counter = 0;
-        
-        foreach ($extracted_books_urls as $key => $url) {
-            
-            if ( DB::table('book_urls')->where('url' , $url)->doesntExist() ) {
-                
-                $book_id = $this->get_book_id();
-                $this->new_books[$key]['id'] = $book_id;
-                $this->new_books[$key]['url'] = $url;
-                
-                // DB::table('book_urls')->insert([
-                    //     'book_id' => $book_id,
-                    //     'url_name' => $this->resource_tag->resource->kind,
-                    //     'url' => $url,
-                    //     'created_at' => now(),
-                    //     'updated_at' => now()
-                    // ]);
-                    
-                    $new_books_counter ++;
-                }
-                
-            }
-            
-            $update_array = [ 'last_crawled_at' => now() ];
-            
-            if ($new_books_counter > count($extracted_books_urls) / 2 ) {
-                $update_array = [ 'num' => $this->resource_tag['num'] + 1 ];
-            }
-            
-        // $this->update_resource_tag($update_array);
-            $this->crawl_new_books();
-            
-        }
-        
-        
-        
-        public function update_resource_tag(array $update_array)
-        {
-            DB::table('resource_tags')
-            ->where('id' , $this->resource_tag['id'])
-            ->update($update_array);
-        }
-        
+
         
         
         public function crawl_new_books()
@@ -129,7 +38,7 @@ class CrawlerController extends Controller
                 $book_publishes = book_publishes($responses[$key]->body());
                 
                 $this->search_book_in_nl($book_details['title']);
-                break;
+                // break;
             }
             
             
@@ -148,55 +57,34 @@ class CrawlerController extends Controller
             ]);
             // echo $res->body();
 
-            $this->find_best_match_in_nl_search_result($res->body());
+            $this->find_best_match_in_nl_search_result($res->body() , $title);
 
         }
 
 
-        public function find_best_match_in_nl_search_result(string $body)
+        public function find_best_match_in_nl_search_result(string $body , $book_title)
         {
             
             $crawler = new Crawler($body);
 
-            $links = $crawler->filter('#table td a')->extract(['href']);
+            $crawler->filter('#table tr')->each(function(Crawler $row , $i) use ($book_title){
 
-            foreach ($links as $key => $link ) {
-                
-                $encoded_link = iconv("UTF-8", "ISO-8859-1" , $link);
-                
-                $search_result[] = [ 'link' => $encoded_link ]; 
-                
-            }
+                $title = $row->filter('#td2')->text();
+                $encoded_title =  $this->encode_to_iso_8859_1($title);
             
-            $titles =  $crawler->filter('#table td')->extract(['_text']);
-            
-            foreach ($titles as $key => $title) {
-                $encoded_title = iconv("UTF-8", "ISO-8859-1" , $title);
-
-                if( strlen(trim( $encoded_title ) ) > 0 ) {
-                    
+                if ( strpos($encoded_title , $book_title) !== false ) {
+                    echo $encoded_title . '<br>';
                 }
-
-            }
+                
+            }); 
             
-            print_r($encoded_titles);
-
         }
+
+
 
 
         
-        /**
-        * send http request and return response body
-        *
-        * @param  string $url
-        * @return string $body
-        */
-        public function send_http_request(string $url)
-        {
-            $res = Http::get($url);
-            return $res->body();
-            
-        }
+     
         
         
         /**
@@ -212,14 +100,11 @@ class CrawlerController extends Controller
         }
         
         
-        /**
-        * insert empty row to book table and return book id
-        *
-        * @return string $book_id
-        */
-        public function get_book_id()
+       
+
+        public function encode_to_iso_8859_1(string $item)
         {
-            return Book::insertGetId(['title' => '']);
+            return iconv("UTF-8" , "ISO-8859-1" , $item);
         }
         
         
