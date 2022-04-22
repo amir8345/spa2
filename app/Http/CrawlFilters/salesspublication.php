@@ -38,7 +38,7 @@ function book_details(string $body , string $baseURI)
             $book_details['isbn'] = str_replace('شابک:' , '' , $value->nodeValue);
         }
         if ( strpos($value->nodeValue , 'نویسنده:') !== false ) {
-           $writer =  str_replace('نویسنده: ' , '' , $value->nodeValue);
+            $book_details['writer'] =  str_replace('نویسنده: ' , '' , $value->nodeValue);
         }
 
     }

@@ -11,11 +11,11 @@ use App\Http\Controllers\Crawler\SendHttpRequest;
 
 class BookResources extends Controller
 {
+   
     public $resource_tag;
     public $resource_url;
     public $resource_body;
     public $new_books;
-    
     
     /**
     * extract resource urls that need to be crawled
@@ -94,6 +94,8 @@ class BookResources extends Controller
             }
             
             $this->update_resource_tag($update_array);
+
+            
             
         }
         
@@ -115,4 +117,10 @@ class BookResources extends Controller
         {
             return Book::insertGetId(['title' => '']);
         }
+
+        
+     
+
+
+
 }
