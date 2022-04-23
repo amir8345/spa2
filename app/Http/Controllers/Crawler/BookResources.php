@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Symfony\Component\DomCrawler\Crawler;
 use App\Http\Controllers\Crawler\SendHttpRequest;
+use App\Jobs\CrawlBookPage;
 
 class BookResources extends Controller
 {
@@ -25,17 +26,12 @@ class BookResources extends Controller
     public function extract_resource()
     {
 
-       $r = 'fhjsdk <br> fkdjos';
-       print_r(explode('<br>' , $r));
-
-        /*
-        
         $this->resource_tag = ResourceTag::orderByDesc('last_crawled_at')->first();
         
         $this->resource_url = str_replace(['{tag}' , '{num}'] , [$this->resource_tag['tag'] , $this->resource_tag['num']] , $this->resource_tag->resource->url );
         
         $this->crawl_resource();
-        */
+
     }
     
     
@@ -73,19 +69,29 @@ class BookResources extends Controller
         
         foreach ($extracted_books_urls as $key => $url) {
             
+            // get reource baseURI
+            $resource_url_to_array = parse_url($this->resource_tag->resource->url);
+            $baseURI = $resource_url_to_array['scheme'] . '://' . $resource_url_to_array['host'];
+            
+            // make a dispatch 
+
+            dispatch( new CrawlBookPage( $url ,  $this->resource_tag->resource->name , $baseURI) );
+
+           
+            
             if ( DB::table('book_urls')->where('url' , $url)->doesntExist() ) {
                 
                 $book_id = $this->get_book_id();
                 $this->new_books[$key]['id'] = $book_id;
                 $this->new_books[$key]['url'] = $url;
                 
-                DB::table('book_urls')->insert([
-                        'book_id' => $book_id,
-                        'url_name' => $this->resource_tag->resource->kind,
-                        'url' => $url,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]);
+                // DB::table('book_urls')->insert([
+                //         'book_id' => $book_id,
+                //         'url_name' => $this->resource_tag->resource->kind,
+                //         'url' => $url,
+                //         'created_at' => now(),
+                //         'updated_at' => now()
+                //     ]);
                     
                     $new_books_counter ++;
                 }
@@ -98,9 +104,7 @@ class BookResources extends Controller
                 $update_array = [ 'num' => $this->resource_tag['num'] + 1 ];
             }
             
-            $this->update_resource_tag($update_array);
-
-            
+            // $this->update_resource_tag($update_array);
             
         }
         
