@@ -64,7 +64,6 @@ class BookDetails extends Controller
             'command' => 'I',
             'advancedSearch.simpleSearch[0].tokenized' => true
         ]);
-        // echo $res->body();
 
         $this->find_best_match_in_nl_search_result($res->body() , $book_details);
 
@@ -162,9 +161,62 @@ class BookDetails extends Controller
                 'name' => 'main_address',
                 'description' => $crawler->filter('.formcontent')->eq(1)->filter('input')->attr('value')
             ];    
-        
+
+            $this->get_creators_from_book_page_in_nl($nl_details);
+
             $this->send_data_to_database($nl_details , 'book_nl');
             $this->send_data_to_database(end($nl_details) , 'book_urls');
+
+    }
+
+    public function get_creators_from_book_page_in_nl(array $nl_details)
+    {
+        // get writer info
+
+        foreach ($nl_details as $nl_row) {
+            
+            if ($nl_row['name'] == 'سرشناسه') {
+
+                $comma_separated_writer_info = $nl_row['description'];
+
+                if ( strpos($comma_separated_writer_info , '<br>') !== false ) {
+                    $comma_separated_writer_info = explode( '<br>' , $comma_separated_writer_info)[0];
+                    $writer_real_name = $comma_separated_writer_info[1];
+                }
+        
+                $writer_info = explode(',' , $comma_separated_writer_info);
+
+                $writer_name = $writer_info[1] . ' ' . $writer_info[0];
+                $writer_birth = $writer_info[2];
+                
+            }
+
+            if ($nl_row['name'] == 'شناسه افزوده') {
+
+                $comma_separated_creator_info = $nl_row['description'];
+
+                $creator_kinds = ['مترجم' , 'ویراستار' , 'تصویرگر'];
+
+                $creator_info = explode(',' , $comma_separated_creator_info );
+
+                if ( in_array(end($creator_info) , $creator_kinds) ) {
+                    $creator_name = $creator_info[1] . ' ' . $creator_info[0];
+                    $creator_birth = $creator_info[2];
+                }
+
+
+            }
+
+
+
+        }
+
+    
+        // get other creators info
+        
+
+
+
 
     }
 

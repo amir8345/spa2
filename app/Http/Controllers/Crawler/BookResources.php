@@ -24,13 +24,18 @@ class BookResources extends Controller
     */
     public function extract_resource()
     {
+
+       $r = 'fhjsdk <br> fkdjos';
+       print_r(explode('<br>' , $r));
+
+        /*
         
         $this->resource_tag = ResourceTag::orderByDesc('last_crawled_at')->first();
         
         $this->resource_url = str_replace(['{tag}' , '{num}'] , [$this->resource_tag['tag'] , $this->resource_tag['num']] , $this->resource_tag->resource->url );
         
         $this->crawl_resource();
-        
+        */
     }
     
     
