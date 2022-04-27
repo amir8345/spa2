@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Crawler;
+namespace App\Http\Controllers\Crawler\ToolClassess;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
@@ -18,7 +18,8 @@ class SendHttpRequest extends Controller
     public function __invoke(string $url)
     {
         $res = Http::get($url);
-        return $res->body();
+
+        return [ 'body' => $res->body() , 'status' => $res->status()];
     }
 
 

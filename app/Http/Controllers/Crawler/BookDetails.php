@@ -3,25 +3,21 @@
 namespace App\Http\Controllers\Crawler;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Crawler\ToolClassess\InsertData;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
-use App\Http\Controllers\Crawler\SendHttpRequest;
+use App\Http\Controllers\Crawler\ToolClassess\SendHttpRequest;
+use App\Http\Controllers\Crawler\ToolClassess\UpdateDatabase;
 
 class BookDetails extends Controller
 {
 
-    public $url;
-    public $resource_name;
-    public $baseURI;
+    public $book;
     
-    
-    public function __construct(string $url , string $resource_name , string $baseURI)
+    public function __construct(array $book)
     {
-        $this->url = $url;
-        $this->resource_name = $resource_name;
-        $this->baseURI = $baseURI;
+        $this->book = $book;
     }
 
     
@@ -29,9 +25,13 @@ class BookDetails extends Controller
     {
         
         $send_http_request = new SendHttpRequest();
-        $body = $send_http_request($this->url);
+        $response = $send_http_request($this->book['url']);
         
-        $this->get_book_info($body);
+        if ($response['status'] == '404') {
+            die();
+        }
+
+        $this->get_book_info($response['body']);
 
 
         // $re = new $this->resource_name($body , $this->resource_name);
@@ -47,9 +47,50 @@ class BookDetails extends Controller
 
     public function get_book_info($body)
     {
+
+        // ************ HOUSE KEEPING
+
+        // if there is no tag , then we need empty array to insert to database
+        $book_tags = [
+            'book_id' => $this->book['id'],
+            'website' => $this->book['resource_kind']
+        ];
+        
+         // if there is no publishing info , then we need empty array to insert to database
+        $book_publishes = [
+            'book_id' => $this->book['id'],
+            'website' => $this->book['resource_kind']
+        ];
+
+        $covers_location = 'C:\Users\amir\Desktop\spa2\storage\covers\\';
+
+        // **************
+
         $crawler = new Crawler($body);
-        require(__DIR__ . '/../../CrawlFilters/' . $this->resource_name . '.php');
-        Log::info($book_details['title']);
+        require(__DIR__ . '/../../CrawlFilters/' . $this->book['resource_name'] . '.php');
+    
+        // update book table because book id has already been inserted
+        $book_details['book_id'] = $this->book['id'];
+        $update_database = new UpdateDatabase();
+        $update_database('book' , $book_details);
+    
+        // insert tags to book_tags table
+        foreach ($book_tags as $key => $tag) {
+            
+            $book_tags[$key]['book_id'] = $this->book['id'];
+            $book_tags[$key]['tag'] = $tag;
+            $book_tags[$key]['website'] = $this->book['resource_kind'];
+            $book_tags[$key]['created_at'] = now();
+            $book_tags[$key]['updated_at'] = now();
+
+        }
+
+        $insert_data = new InsertData();
+        $insert_data('book_tags' , $book_tags);
+
+        // insert book publishes to datebase
+        $insert_data('book_publishes' , $book_publishes);
+
     }
     
     
@@ -233,7 +274,7 @@ class BookDetails extends Controller
     }
 
 
-    public function send_data_to_database(array $array , string $table_name)
+    public function send_data_to_database( string $table_name , array $array )
     {
 
         DB::table($table_name)->insert($array);

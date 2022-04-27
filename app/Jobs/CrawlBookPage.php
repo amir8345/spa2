@@ -15,30 +15,26 @@ class CrawlBookPage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $url;
-    public $resource_name;
-    public $baseURI;
+    public $book;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(string $url , string $resource_name , string $baseURI)
+    public function __construct(array $book)
     {
-        $this->url = $url;
-        $this->resource_name = $resource_name;
-        $this->baseURI = $baseURI;
+        $this->book = $book;
     }
 
     /**
-     * Execute the job.
+     * Execute the job
      *
      * @return void
      */
     public function handle()
     {
-        $book_details = new BookDetails($this->url , $this->resource_name , $this->baseURI);
+        $book_details = new BookDetails($this->book);
         $book_details->crawl_new_book();
     }
 }
