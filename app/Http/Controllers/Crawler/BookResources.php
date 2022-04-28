@@ -63,6 +63,7 @@ class BookResources extends Controller
             $book['id'] = $this->get_book_id();
             $book['url'] = $book_url;
             $book['resource_name'] =$this->resource_tag->resource->name;
+            $book['resource_persian_name'] =$this->resource_tag->resource->persian_name;
             $book['resource_kind'] =$this->resource_tag->resource->kind;
 
             // make a dispatch 

@@ -91,15 +91,19 @@ class BookDetails extends Controller
         // insert book publishes to datebase
         $insert_data('book_publishes' , $book_publishes);
 
+        $this->search_book_in_nl($book_details['isbn']);
+
     }
     
     
-    public function search_book_in_nl(array $book_details)
+    public function search_book_in_nl(string $isbn)
     {
 
         $body = Http::asForm()->post('https://opac.nlai.ir/opac-prod/search/bibliographicAdvancedSearchProcess.do' , [
             'advancedSearch.simpleSearch[0].indexFieldId' => 221091,
-            'advancedSearch.simpleSearch[0].value' => $book_details['isbn'],
+            'advancedSearch.simpleSearch[0].value' => $isbn,
+            'advancedSearch.simpleSearch[0].indexFieldId' => 10070,
+            'advancedSearch.simpleSearch[0].value' => $this->book['resource_persian_name'],
             'classType' => 0,
             'command' => 'I',
             'advancedSearch.simpleSearch[0].tokenized' => false
@@ -182,7 +186,6 @@ class BookDetails extends Controller
     public function crawl_book_url_nl(string $url)
     {
 
-        
         $send_http_request = new SendHttpRequest();
         $body = $send_http_request($url);
         
@@ -195,7 +198,7 @@ class BookDetails extends Controller
             ->filter('table table table td')
             ->each(function(Crawler $node , $i) {
 
-                $nl_details[$i]['book_id'] = $this->new_books['book_id'];
+                $nl_details[$i]['book_id'] = $this->book['id'];
 
                 if ($node->attr('width') == "20%") {
                     $name = $this->encode_to_iso_8859_1($node->text());
@@ -209,16 +212,23 @@ class BookDetails extends Controller
                
             });
 
-            $nl_details[] = [ 
-                'book_id' => $this->new_books['book_id'],
-                'name' => 'main_address',
-                'description' => $crawler->filter('.formcontent')->eq(1)->filter('input')->attr('value')
-            ];    
+            
+            $insert_data = new InsertData();
+            $insert_data('book_nl' , $nl_details);
+            
+            // insert nl main address to database
+            $nl_url = [
+                'book_id' => $this->book['id'],
+                'url_name' => 'nl',
+                'url' => $crawler->filter('.formcontent')->eq(1)->filter('input')->attr('value'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
 
+            $insert_data('book_urls' , $nl_url);
+            
             $this->get_creators_from_book_page_in_nl($nl_details);
 
-            $this->send_data_to_database($nl_details , 'book_nl');
-            $this->send_data_to_database(end($nl_details) , 'book_urls');
 
     }
 
@@ -270,14 +280,6 @@ class BookDetails extends Controller
 
 
 
-
-    }
-
-
-    public function send_data_to_database( string $table_name , array $array )
-    {
-
-        DB::table($table_name)->insert($array);
 
     }
 
