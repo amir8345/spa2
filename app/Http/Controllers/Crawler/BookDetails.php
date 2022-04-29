@@ -229,59 +229,50 @@ class BookDetails extends Controller
             
             $this->get_creators_from_book_page_in_nl($nl_details);
 
-
     }
 
-    public function get_creators_from_book_page_in_nl(array $nl_details)
-    {
-        // get writer info
+    // public function get_creators_from_book_page_in_nl(array $nl_details)
+    // {
+    //     // get writer info
 
-        foreach ($nl_details as $nl_row) {
+    //     foreach ($nl_details as $nl_row) {
             
-            if ($nl_row['name'] == 'سرشناسه') {
+    //         if ($nl_row['name'] == 'سرشناسه') {
 
-                $comma_separated_writer_info = $nl_row['description'];
+    //             $comma_separated_writer_info = $nl_row['description'];
 
-                if ( strpos($comma_separated_writer_info , '<br>') !== false ) {
-                    $comma_separated_writer_info = explode( '<br>' , $comma_separated_writer_info)[0];
-                    $writer_real_name = $comma_separated_writer_info[1];
-                }
+    //             if ( strpos($comma_separated_writer_info , '<br>') !== false ) {
+    //                 $comma_separated_writer_info = explode( '<br>' , $comma_separated_writer_info)[0];
+    //                 $writer_real_name = $comma_separated_writer_info[1];
+    //             }
         
-                $writer_info = explode(',' , $comma_separated_writer_info);
+    //             $writer_info = explode(',' , $comma_separated_writer_info);
 
-                $writer_name = $writer_info[1] . ' ' . $writer_info[0];
-                $writer_birth = $writer_info[2];
+    //             $writer_name = $writer_info[1] . ' ' . $writer_info[0];
+    //             $writer_birth = $writer_info[2];
                 
-            }
+    //         }
 
-            if ($nl_row['name'] == 'شناسه افزوده') {
+    //         if ($nl_row['name'] == 'شناسه افزوده') {
 
-                $comma_separated_creator_info = $nl_row['description'];
+    //             $comma_separated_creator_info = $nl_row['description'];
 
-                $creator_kinds = ['مترجم' , 'ویراستار' , 'تصویرگر'];
+    //             $creator_kinds = ['مترجم' , 'ویراستار' , 'تصویرگر'];
 
-                $creator_info = explode(',' , $comma_separated_creator_info );
+    //             $creator_info = explode(',' , $comma_separated_creator_info );
 
-                if ( in_array(end($creator_info) , $creator_kinds) ) {
-                    $creator_name = $creator_info[1] . ' ' . $creator_info[0];
-                    $creator_birth = $creator_info[2];
-                }
+    //             if ( in_array(end($creator_info) , $creator_kinds) ) {
+    //                 $creator_name = $creator_info[1] . ' ' . $creator_info[0];
+    //                 $creator_birth = $creator_info[2];
+    //             }
 
+    //         }
 
-            }
-
-
-
-        }
-
+    //     }
     
-        // get other creators info
-        
+    //     // get other creators info
 
-
-
-
-    }
+    // }
 
 
     public function encode_to_iso_8859_1(string $item)
