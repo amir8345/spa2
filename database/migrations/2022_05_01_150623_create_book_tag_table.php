@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\User;
+use App\Models\Tag;
+use App\Models\Book;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -14,12 +15,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('follows', function (Blueprint $table) {
+        Schema::create('book_tag', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class);
-            $table->string('following_type');
-            $table->bigInteger('following_id');
-            $table->stirng('status');
+            $table->foreignIdFor(Book::class);
+            $table->foreignIdFor(Tag::class);
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('follows');
+        Schema::dropIfExists('book_tag');
     }
 };

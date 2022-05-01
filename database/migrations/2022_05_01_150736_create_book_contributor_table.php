@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Book;
+use App\Models\Contributor;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -13,8 +15,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('contributor_user', function (Blueprint $table) {
+        Schema::create('book_contributor', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Book::class);
+            $table->foreignIdFor(Contributor::class);
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contributor_user');
+        Schema::dropIfExists('book_contributor');
     }
 };

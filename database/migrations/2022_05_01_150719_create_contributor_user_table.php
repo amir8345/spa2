@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Contributor;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -14,12 +15,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('follows', function (Blueprint $table) {
+        Schema::create('contributor_user', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Contributor::class);
             $table->foreignIdFor(User::class);
-            $table->string('following_type');
-            $table->bigInteger('following_id');
-            $table->stirng('status');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('follows');
+        Schema::dropIfExists('contributor_user');
     }
 };
