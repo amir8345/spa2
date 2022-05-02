@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->string('following_type');
             $table->bigInteger('following_id');
-            $table->stirng('status');
+            $table->string('status');
             $table->timestamps();
         });
     }

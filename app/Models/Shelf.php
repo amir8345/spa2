@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Shelf extends Model
 {
     use HasFactory;
+
+    public function books()
+    {
+        return $this->belongsToMany(Book::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('shelves', function (Blueprint $table) {
             $table->id();
-            $table->stirng('name');
+            $table->string('name');
             $table->timestamps();
         });
     }

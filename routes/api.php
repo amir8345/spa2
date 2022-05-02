@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Crawler\BookResources;
 
@@ -19,4 +20,8 @@ Route::middleware('auth:sanctum')->get('/profile' , function(){
 
 
 Route::get('/crawl' , [BookResources::class , 'extract_resource']);
+
+// book
+Route::get('/books' , [BookController::class , 'get_all_books']);
+
 

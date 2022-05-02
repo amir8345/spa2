@@ -43,9 +43,19 @@ class Book extends Model
     }
     
 
-    public function contributors()
+    public function writers()
     {
-        return $this->belongsToMany(Contributor::class);
+        return $this->belongsToMany(Contributor::class)->wherePivot('action' , 'writer');
+    }
+
+    public function translators()
+    {
+        return $this->belongsToMany(Contributor::class)->wherePivot('action' , 'translator');
+    }
+
+    public function editors()
+    {
+        return $this->belongsToMany(Contributor::class)->wherePivot('action' , 'editor');
     }
 
     public function scores()

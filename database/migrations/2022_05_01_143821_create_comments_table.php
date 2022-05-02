@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->stirng('writer_kind');
+            $table->string('writer_kind');
             $table->foreignId('writer_id');
             $table->string('reciever_type');
             $table->foreignId('reciever_id');

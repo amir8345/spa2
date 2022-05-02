@@ -57,9 +57,23 @@ class User extends Authenticatable
         return $this->morphToMany(User::class , 'follower');
     }
 
-    public function followings()
+    public function followings_users()
     {
         return $this->morphedByMany(User::class , 'followings');
     }
 
+    public function followings_publishers()
+    {
+        return $this->morphedByMany(Publisher::class , 'followings');
+    }
+
+    public function scores()
+    {
+        return $this->hasMany(Score::class);
+    }
+
+    public function shelves()
+    {
+        return $this->belongsToMany(Shelf::class);
+    }
 }
