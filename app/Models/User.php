@@ -42,7 +42,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function posts_by()
+    {
+        return $this->morphMany(Post::class , 'writer');
+    }
+  
+    public function comments_by()
+    {
+        return $this->morphMany(Comment::class , 'wirter');
+    }
+    
+    public function followers()
+    {
+        return $this->morphToMany(User::class , 'follower');
+    }
 
-
+    public function followings()
+    {
+        return $this->morphedByMany(User::class , 'followings');
+    }
 
 }

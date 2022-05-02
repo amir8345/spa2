@@ -17,16 +17,6 @@ class Publisher extends Model
     {
         return $this->hasMany(Book::class);
     }
-
-    public function posts_by()
-    {
-        return $this->morphMany(Post::class , 'writer');
-    }
-  
-    public function comments_by()
-    {
-        return $this->morphMany(Comment::class , 'wirter');
-    }
     
     public function posts_on()
     {
@@ -40,8 +30,9 @@ class Publisher extends Model
 
     public function followers()
     {
-        return $this->morphToMany(User::class , 'following');
+        return $this->morphToMany(User::class , 'followers');
     }
+   
 
 
 }
