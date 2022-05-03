@@ -2,16 +2,14 @@
 
 namespace App\Http\Resources\Book;
 
+use App\Http\Resources\Publisher\Books AS PublisherBooks;
+use App\Http\Resources\Contributor\Books AS ContributorBooks;
+use App\Http\Resources\Post\Book as PostBook;
 use App\Http\Resources\Tag;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Publisher\Books AS PublisherBooks;
-use App\Http\Resources\Contributor\Books as ContributorBooks;
 
-class Books extends JsonResource
+class Book extends JsonResource
 {
-
-    public $preserveKeys = true;
-
     /**
      * Transform the resource into an array.
      *
@@ -21,9 +19,21 @@ class Books extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
             'title' => $this->title,
+            'title2' => $this->title2,
+            'lang' => $this->lang,
+            'city' => $this->city,
+            'age' => $this->age,
             'isbn' => $this->isbn,
+            'format' => $this->format,
+            'size' => $this->size,
+            'weight' => $this->weight,
+            'cover' => $this->cover,
+            'paper' => $this->paper,
+            'pages' => $this->pages,
+            'colorful' => $this->colorful,
+            'binding' => $this->binding,
+            'about' => $this->about,
             'publisher' => new PublisherBooks($this->publisher),
             'writers' => ContributorBooks::collection($this->writers),
             'translators' => ContributorBooks::collection($this->translators),
@@ -34,8 +44,12 @@ class Books extends JsonResource
                 'had_read' =>  $this->had_read(),
                 'reading' =>  $this->reading(),
             ],
+            'posts' => PostBook::collection($this->posts),
+
             'score' => round($this->score() , 1) 
-           
+            
+
+
         ];
     }
 }

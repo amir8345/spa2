@@ -27,6 +27,21 @@ class Book extends Model
         return $this->belongsToMany(Shelf::class);
     }
 
+    public function had_read()
+    {
+        return $this->belongsToMany(Shelf::class)->where('name' , 'read')->count();
+    }
+
+    public function want_to_read()
+    {
+        return $this->belongsToMany(Shelf::class)->where('name' , 'want')->count();
+    }
+
+    public function reading()
+    {
+        return $this->belongsToMany(Shelf::class)->where('name' , 'reading')->count();
+    }
+
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
@@ -34,14 +49,13 @@ class Book extends Model
     
     public function posts()
     {
-        return $this->hasMany(Post::class);
+        return $this->morphMany(Post::class , 'reciever');
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->morphMany(Comment::class , 'reciever');
     }
-    
 
     public function writers()
     {
@@ -58,11 +72,10 @@ class Book extends Model
         return $this->belongsToMany(Contributor::class)->wherePivot('action' , 'editor');
     }
 
-    public function scores()
+    public function score()
     {
-        return $this->hasMany(Score::class);
+        return $this->hasMany(Score::class)->avg('score');
     }
 
-    
 
 }

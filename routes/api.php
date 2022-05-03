@@ -23,5 +23,6 @@ Route::get('/crawl' , [BookResources::class , 'extract_resource']);
 
 // book
 Route::get('/books' , [BookController::class , 'get_all_books']);
+Route::get('/book' , [BookController::class , 'one_book']);
 
 
