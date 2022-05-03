@@ -74,6 +74,6 @@ class User extends Authenticatable
 
     public function shelves()
     {
-        return $this->belongsToMany(Shelf::class);
+        return $this->hasMany(Shelf::class);
     }
 }
