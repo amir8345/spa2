@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Post extends JsonResource
+class PublisherResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,6 +17,9 @@ class Post extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            $this->mergeWhen($request->path() == 'api/publisher' , [
+                // info that should be displayed on publisher page only
+            ]),
         ];
     }
 }

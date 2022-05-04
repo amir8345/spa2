@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Contributor;
+namespace App\Http\Resources;
 
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Books extends JsonResource
+class PostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,9 +15,12 @@ class Books extends JsonResource
      */
     public function toArray($request)
     {
+        // dd($this->writer);
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'writer' => new UserResource($this->writer),
+            'title' => $this->title,
+            'body' => $this->body,
         ];
     }
 }

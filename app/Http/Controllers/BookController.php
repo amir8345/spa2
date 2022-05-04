@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Resources\Book\Book AS BookPage;
-use App\Http\Resources\Book\Books AS BooksPage;
+use App\Http\Resources\BookResource;
+
 
 class BookController extends Controller
 {
@@ -55,7 +55,7 @@ class BookController extends Controller
         ->limit(20)
         ->get();
 
-        return BooksPage::collection($books);
+        return BookResource::collection($books);
     }
 
 
@@ -64,7 +64,7 @@ class BookController extends Controller
     public function one_book(Request $request)
     {
         $book = Book::find($request->id);
-        return new BookPage($book);
+        return new BookResource($book);
     }
     
 

@@ -54,7 +54,7 @@ class User extends Authenticatable
     
     public function followers()
     {
-        return $this->morphToMany(User::class , 'follower');
+        return $this->morphToMany(User::class , 'following' , 'follows');
     }
 
     public function followings_users()

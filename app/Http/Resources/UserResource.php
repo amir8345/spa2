@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Post;
+namespace App\Http\Resources;
 
-use App\Http\Resources\User\Post;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Book extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +16,7 @@ class Book extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'writer' => new Post($this->writer)
+            'name' => $this->name,
         ];
     }
 }

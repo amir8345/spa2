@@ -1,9 +1,13 @@
 <?php
 
+use App\Models\Tag;
+use App\Models\Book;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ContributorController;
 use App\Http\Controllers\Crawler\BookResources;
+use App\Http\Resources\Book\Book AS ResourceBook;
 
 Route::post('/login' , [LoginController::class , 'login']);
 Route::get('/login/send_code' , [LoginController::class , 'send_code']);
@@ -24,5 +28,8 @@ Route::get('/crawl' , [BookResources::class , 'extract_resource']);
 // book
 Route::get('/books' , [BookController::class , 'get_all_books']);
 Route::get('/book' , [BookController::class , 'one_book']);
+
+// contributor 
+Route::get('/contributor' , [ContributorController::class , 'one_contributor']);
 
 
