@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Book;
+use App\Models\Follow;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -52,20 +54,22 @@ class User extends Authenticatable
         return $this->morphMany(Comment::class , 'wirter');
     }
     
+
     public function followers()
     {
-        return $this->morphToMany(User::class , 'following' , 'follows');
+        return $this->morphToMany(User::class , 'following' , 'follows' , 'following_id' , 'follower_id');
     }
 
-    public function followings_users()
+    public function followings_user()
     {
-        return $this->morphedByMany(User::class , 'followings');
+        return $this->morphedByMany(User::class , 'following' , 'follows' , 'follower_id' , 'following_id');
     }
 
-    public function followings_publishers()
+    public function followings_publisher()
     {
-        return $this->morphedByMany(Publisher::class , 'followings');
+        return $this->morphedByMany(Publisher::class , 'following' , 'follows' , 'follower_id' , 'following_id');
     }
+
 
     public function scores()
     {

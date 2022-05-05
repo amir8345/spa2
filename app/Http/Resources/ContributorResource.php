@@ -16,7 +16,6 @@ class ContributorResource extends JsonResource
      */
     public function toArray($request)
     {
-        // dd(User::find($this->user->user_id)->followers);
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -26,11 +25,13 @@ class ContributorResource extends JsonResource
                 // ...
                 
                 // info that should be displayed on contributor page 
-                // if contributor had signed up in website
+                // if contributor had signed up
 
                 $this->mergeWhen($this->user , [
                     'is_user' => true,
-                    'followers' => UserResource::collection(User::find($this->user->user_id)->followers)
+                    'followers' => UserResource::collection(User::find($this->user->user_id)->followers),
+                    'followings_user' => UserResource::collection(User::find($this->user->user_id)->followings_user ),
+                    'followings_publisher' => PublisherResource::collection(User::find($this->user->user_id)->followings_publisher)
                 ]),
             ]),
         ];

@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
             'user' => 'App\Models\User',
             'book' => 'App\Models\Contributor',
             'book' => 'App\Models\Shelf',
+            'publisher' => 'App\Models\Publisher',
         ]);
     }
 }
