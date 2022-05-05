@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Book;
 use App\Models\Follow;
+use App\Models\PublisherUser;
+use App\Models\ContributorUser;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -54,7 +56,6 @@ class User extends Authenticatable
         return $this->morphMany(Comment::class , 'wirter');
     }
     
-
     public function followers()
     {
         return $this->morphToMany(User::class , 'following' , 'follows' , 'following_id' , 'follower_id');
@@ -70,7 +71,6 @@ class User extends Authenticatable
         return $this->morphedByMany(Publisher::class , 'following' , 'follows' , 'follower_id' , 'following_id');
     }
 
-
     public function scores()
     {
         return $this->hasMany(Score::class);
@@ -80,4 +80,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Shelf::class);
     }
+
+    public function publisher()
+    {
+        return $this->hasOne(PublisherUser::class);
+    }
+   
+    public function contributor()
+    {
+        return $this->hasOne(ContributorUser::class);
+    }
+
+
+
 }

@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\PublisherUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -30,7 +31,12 @@ class Publisher extends Model
 
     public function followers()
     {
-        return $this->morphToMany(User::class , 'followers');
+        return $this->morphToMany(User::class , 'following' , 'follows' , 'following_id' , 'follower_id');
+    }
+
+    public function user()
+    {
+        return $this->hasOne(PublisherUser::class);
     }
    
 

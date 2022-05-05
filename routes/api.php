@@ -5,6 +5,7 @@ use App\Models\Book;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ContributorController;
 use App\Http\Controllers\Crawler\BookResources;
 use App\Http\Resources\Book\Book AS ResourceBook;
@@ -31,5 +32,8 @@ Route::get('/book' , [BookController::class , 'one_book']);
 
 // contributor 
 Route::get('/contributor' , [ContributorController::class , 'one_contributor']);
+
+// publisher
+Route::get('/publisher' , [PublisherController::class , 'one_publisher']);
 
 
