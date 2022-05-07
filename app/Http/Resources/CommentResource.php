@@ -3,10 +3,9 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\RoleResource;
-use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+class CommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,8 +18,8 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
             'writer' => new RoleResource($this->writer),
-            'title' => $this->title,
             'body' => $this->body,
         ];
+
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\User;
+use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,6 +20,7 @@ class ContributorResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+
             $this->mergeWhen($request->path() == 'api/contributor' , [
                 // info that should be displayed on contributor page only
                 
@@ -27,13 +29,23 @@ class ContributorResource extends JsonResource
                 // info that should be displayed on contributor page 
                 // if contributor had signed up
 
-                $this->mergeWhen($this->user , [
-                    'is_user' => true,
-                    'followers' => UserResource::collection(User::find($this->user->user_id)->followers),
-                    'followings_user' => UserResource::collection(User::find($this->user->user_id)->followings_user ),
-                    'followings_publisher' => PublisherResource::collection(User::find($this->user->user_id)->followings_publisher)
-                ]),
+                $this->mergeWhen($this->user , function() {
+
+                    if(! $this->user) {
+                        return null;
+                    }
+
+                    return [
+                        'is_user' => true,
+                        'followers' => RoleResource::collection(User::find($this->user->user_id)->followers),
+                        'followings_user' => RoleResource::collection(User::find($this->user->user_id)->followings_user ),
+                        'followings_publisher' => RoleResource::collection(User::find($this->user->user_id)->followings_publisher)
+                    ];
+
+
+                }),
             ]),
         ];
     }
 }
+

@@ -17,7 +17,7 @@ class Comment extends Model
 
     public function writer()
     {
-        return $this->morphTo();
+        return $this->belongsTo(User::class , 'user_id');
     }
   
     public function receiver()

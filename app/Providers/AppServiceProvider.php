@@ -27,8 +27,8 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
             'book' => 'App\Models\Book',
             'user' => 'App\Models\User',
-            'book' => 'App\Models\Contributor',
-            'book' => 'App\Models\Shelf',
+            'contributor' => 'App\Models\Contributor',
+            'shelf' => 'App\Models\Shelf',
             'publisher' => 'App\Models\Publisher',
         ]);
     }

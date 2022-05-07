@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use App\Models\User;
-use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\PublisherResource AS yu;
+use App\Http\Resources\RoleResource;
+use App\Http\Resources\PublisherResource AS tr;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PublisherResource extends JsonResource
@@ -24,19 +23,23 @@ class PublisherResource extends JsonResource
             'name' => $this->name,
             
             $this->mergeWhen($request->path() == 'api/publisher', function(){
-                
 
                 return [
-                    'followers' => UserResource::collection($this->followers),
+                    'followers' => RoleResource::collection($this->followers),
                     
-                    // $this->mergeWhen($this->user , function() {
-                    //     return [ 
-                    //         'followings_user' => UserResource::collection(User::find($this->user->user_id)->followings_user),
-                    //         'followings_publisher' => $this->collection(User::find($this->user->user_id)->followings_publisher),
+                    $this->mergeWhen($this->user , function() {
+                  
+                        if (! $this->user) {
+                            return null;
+                        }
+                  
+                        return [ 
+                            'followings_user' => RoleResource::collection(User::find($this->user->user_id)->followings_user),
+                            'followings_publisher' => RoleResource::collection(User::find($this->user->user_id)->followings_publisher),
                             
-                    //     ];
+                        ];
                         
-                    // }),
+                    }),
                 ];
             }),
             

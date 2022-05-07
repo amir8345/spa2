@@ -10,21 +10,21 @@ use App\Http\Resources\BookResource;
 
 class BookController extends Controller
 {
-    public function get_all_books(Request $request)
+    public function all_books(Request $request)
     {
 
         // most want_to_read and had_read books
-        if ($request->order_by == 'read' || $request->order_by == 'want') {
+        if ($request->order == 'read' || $request->order == 'want') {
 
             $requested_books = DB::table('most_popular_books')
             ->select('book_id')
-            ->where('shelf_name' , $request->order_by)
+            ->where('shelf_name' , $request->order)
             ->orderByDesc('number') 
             ->get();
         }
 
         // most comments_and_posts books
-        if ($request->order_by == 'dibated') {
+        if ($request->order == 'dibated') {
            
             $requested_books = DB::table('most_dibated_books')->orderByDesc('num')->get();
         }

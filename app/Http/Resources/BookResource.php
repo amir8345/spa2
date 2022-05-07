@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\TagResource;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\PublisherResource;
 use App\Http\Resources\ContributorResource;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -52,6 +53,7 @@ class BookResource extends JsonResource
                 ],
                 'score' => round($this->score() , 1),
                 'posts' => PostResource::collection($this->posts),
+                'comments' => CommentResource::collection($this->comments),
                 ])
             ];
             
