@@ -19,14 +19,14 @@ class Publisher extends Model
         return $this->hasMany(Book::class);
     }
     
-    public function posts_on()
+    public function posts()
     {
-        return $this->morphMany(Post::class, 'receiver');
+        return $this->morphMany(Post::class, 'posted');
     }
    
-    public function comments_on()
+    public function comments()
     {
-        return $this->morphMany(Comment::class, 'receiver');
+        return $this->morphMany(Comment::class, 'commented');
     }
 
     public function followers()

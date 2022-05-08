@@ -21,7 +21,7 @@ class Contributor extends Model
   
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->morphMany(Comment::class, 'commented');
     }
 
     public function books()

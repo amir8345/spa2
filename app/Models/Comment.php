@@ -12,7 +12,7 @@ class Comment extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment2::class);
+        return $this->morphMany(Comment2::class , 'commented');
     }
 
     public function writer()
@@ -20,7 +20,7 @@ class Comment extends Model
         return $this->belongsTo(User::class , 'user_id');
     }
   
-    public function receiver()
+    public function parent()
     {
         return $this->morphTo();
     }
