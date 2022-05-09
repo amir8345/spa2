@@ -48,12 +48,22 @@ class User extends Authenticatable
 
     public function posts_by()
     {
-        return $this->morphMany(Post::class , 'writer');
+        return $this->hasMany(Post::class , 'writer');
     }
   
     public function comments_by()
     {
-        return $this->morphMany(Comment::class , 'wirter');
+        return $this->hasMany(Comment::class , 'wirter');
+    }
+
+    public function posts_on()
+    {
+        return $this->morphMany(Post::class , 'posted');
+    }
+    
+    public function comments_on()
+    {
+        return $this->morphMany(Comment::class , 'commented');
     }
     
     public function followers()

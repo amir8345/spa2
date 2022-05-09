@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Shelf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\BookResource;
@@ -67,6 +68,55 @@ class BookController extends Controller
         return new BookResource($book);
     }
     
+
+
+    public function add_to_shelf(Book $book , Shelf $shelf)
+    {
+        $new_book_shelf = DB::table('book_shelf')->insertGetId([
+            'book_id' => $book->id,
+            'shelf_id' => $shelf->id
+        ]);
+
+        if (! $new_book_shelf) {
+            return 'something is wronge';
+        }
+
+        return 'book inserted successfully';
+
+    }
+
+
+    public function remove_from_shelf(Book $book , Shelf $shelf)
+    {
+        $book_shelf = DB::table('book_shelf')
+        ->where('book_id' , $book->id)
+        ->when('shelf_id' , $shelf->id)
+        ->first();
+
+        if ($book_shelf->delete() != 1) {
+            return 'could not delete book from shelf';
+        }
+
+        return 'book deleleted from shelf successfully';
+    }
+
+
+    public function update_book_shelf(Book $book , Shelf $shelf_to , Shelf $shelf_from)
+    {
+
+        $updated_book_shelf = DB::table('book_shelf')
+        ->where('book_id' , $book->id)
+        ->where('shelf_id' , $shelf_from->id)
+        ->update(['shelf_id' => $shelf_to]);
+
+        if ($updated_book_shelf != 1) {
+            return 'could not update book status';
+        }
+
+        return 'book status updated successfully';
+        
+    }
+
 
 
 }

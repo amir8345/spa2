@@ -27,10 +27,6 @@ class ShelfController extends Controller
     public function delete(Shelf $shelf)
     {
 
-        if ($shelf->user_id != request()->user()->id) {
-            return 'you are not authorized';
-        }
-
         if ($shelf->delete() != 1) {
             return 'something is wrong';
         }
@@ -42,10 +38,6 @@ class ShelfController extends Controller
     public function update(Shelf $shelf)
     {
 
-        if ($shelf->user_id != request()->user()->id) {
-            return 'you are not authorized';
-        }
-
         if ($shelf->update(['name' => request()->name]) != 1) {
             return 'something is wrong';
         }
@@ -54,12 +46,16 @@ class ShelfController extends Controller
 
     }
     
-
     public function show(Shelf $shelf)
     {
         return new ShelfResource($shelf);
     }
 
+    public function library()
+    {
+        $user = request()->user();
+        return ShelfResource::collection($user->shelves);
 
+    }
 
 }

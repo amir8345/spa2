@@ -16,10 +16,19 @@ class ShelfResource extends JsonResource
     public function toArray($request)
     {
 
+        if (request()->paht == 'api/library') {
+            $books = $this->books->limit(5)->get();
+        }
+        
+        if (request()->paht() == 'api/shelf') {
+            $books = $this->books;
+        }
+
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'books' => BookResource::collection($this->books) 
+            'num' => $this->books->count,
+            'books' => BookResource::collection($books),
         ];
         
     }

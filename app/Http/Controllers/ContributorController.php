@@ -28,9 +28,8 @@ class ContributorController extends Controller
     }
 
 
-    public function one_contributor(Request $request)
+    public function one_contributor(Contributor $contributor)
     {
-        $contributor = Contributor::find($request->id);
         return new ContributorResource($contributor);
     }
 }

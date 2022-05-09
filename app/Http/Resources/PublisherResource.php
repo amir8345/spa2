@@ -21,6 +21,7 @@ class PublisherResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'books_num' => $this->books->count,
             
             $this->mergeWhen($request->path() == 'api/publisher', function(){
 
