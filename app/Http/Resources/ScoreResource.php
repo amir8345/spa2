@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\RoleResource;
-use App\Http\Resources\UserResource;
+use App\Models\Book;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CommentResource extends JsonResource
+class ScoreResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +16,8 @@ class CommentResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'writer' => new UserResource($this->writer),
-            'body' => $this->body,
+            'book_id' => new BookResource( Book::find($this->book_id) ),
+            'score' => $this->score,
         ];
-
     }
 }

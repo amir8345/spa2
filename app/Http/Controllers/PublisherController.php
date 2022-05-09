@@ -9,16 +9,15 @@ use Illuminate\Http\Request;
 class PublisherController extends Controller
 {
 
-    public function all()
+    public function all($order , $page)
     {
         $publishers = Publisher::all();
         return PublisherResource::collection($publishers);
     }
 
 
-    public function one_publisher(Request $request)
+    public function one(Publisher $publisher)
     {
-        $publisher = Publisher::find($request->id);
         return new PublisherResource($publisher);
     }
 }

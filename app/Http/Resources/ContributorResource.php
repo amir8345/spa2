@@ -17,33 +17,24 @@ class ContributorResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        $type = 'contributor';
+        $id = $this->id;
+
+        if ($this->user) {
+            $type = 'user';
+            $id = $this->user->user_id;
+        }
+
         return [
-            'id' => $this->id,
+            'type' => $type,
+            'id' => $id,
             'name' => $this->name,
 
-            $this->mergeWhen($request->path() == 'api/contributor' , [
+            $this->mergeWhen($request->routeIs('contibutor') , [
                 // info that should be displayed on contributor page only
-                
                 // ...
-                
-                // info that should be displayed on contributor page 
-                // if contributor had signed up
 
-                $this->mergeWhen($this->user , function() {
-
-                    if(! $this->user) {
-                        return null;
-                    }
-
-                    return [
-                        'is_user' => true,
-                        'followers' => RoleResource::collection(User::find($this->user->user_id)->followers),
-                        'followings_user' => RoleResource::collection(User::find($this->user->user_id)->followings_user ),
-                        'followings_publisher' => RoleResource::collection(User::find($this->user->user_id)->followings_publisher)
-                    ];
-
-
-                }),
             ]),
         ];
     }

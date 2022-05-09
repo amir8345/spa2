@@ -11,23 +11,25 @@ use App\Http\Resources\BookResource;
 
 class BookController extends Controller
 {
-    public function all_books(Request $request)
+    public function all($order , $page)
     {
 
         // most want_to_read and had_read books
-        if ($request->order == 'read' || $request->order == 'want') {
+        if ($order == 'read' || $order == 'want') {
 
             $requested_books = DB::table('most_popular_books')
             ->select('book_id')
-            ->where('shelf_name' , $request->order)
+            ->where('shelf_name' , $order)
             ->orderByDesc('number') 
             ->get();
         }
 
         // most comments_and_posts books
-        if ($request->order == 'dibated') {
+        if ($order == 'dibated') {
            
-            $requested_books = DB::table('most_dibated_books')->orderByDesc('num')->get();
+            $requested_books = DB::table('most_dibated_books')
+            ->orderByDesc('num')
+            ->get();
         }
 
         // newest books
@@ -52,7 +54,7 @@ class BookController extends Controller
         }
 
         $books = Book::orderByRaw($requested_order)
-        ->offset( ( $request->page - 1 ) * 20)
+        ->offset( ( $page - 1 ) * 20)
         ->limit(20)
         ->get();
 
@@ -60,11 +62,8 @@ class BookController extends Controller
     }
 
 
-
-
-    public function one_book(Request $request)
+    public function one(Book $book)
     {
-        $book = Book::find($request->id);
         return new BookResource($book);
     }
     

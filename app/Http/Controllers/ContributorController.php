@@ -10,17 +10,16 @@ use App\Http\Resources\ContributorResource;
 class ContributorController extends Controller
 {
 
-    public function all_contributors(Request $request)
+    public function all($type , $order ,$page)
     {
-
         $requested_type_ids = DB::table('book_contributor')
-        ->where('action' , $request->type)
+        ->where('action' , $type)
         ->pluck('contributor_id');
 
         $contributors = Contributor::
         whereIn('id' , $requested_type_ids->toArray())
         // ->orderByRaw($requested_order)
-        ->offset( ( $request->page - 1 ) * 20)
+        ->offset( ( $page - 1 ) * 20)
         ->limit(20)
         ->get();
 
@@ -28,7 +27,7 @@ class ContributorController extends Controller
     }
 
 
-    public function one_contributor(Contributor $contributor)
+    public function one(Contributor $contributor)
     {
         return new ContributorResource($contributor);
     }

@@ -20,18 +20,12 @@ class BookResource extends JsonResource
     */
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'isbn' => $this->isbn,
-            'publisher' => new PublisherResource($this->publisher),
-            'contributors' => [
-                'writers' => ContributorResource::collection($this->writers),
-                'translators' => ContributorResource::collection($this->translators),
-                'editors' => ContributorResource::collection($this->editors),
-            ],
+        
+        $info = null;
+        
+        if ($request->routeIs('book')) {
             
-            $this->mergeWhen( $request->path() == 'api/book', [
+            $info = [
                 'title2' => $this->title2,
                 'lang' => $this->lang,
                 'city' => $this->city,
@@ -54,10 +48,22 @@ class BookResource extends JsonResource
                 'score' => round($this->score() , 1),
                 'posts' => PostResource::collection($this->posts),
                 'comments' => CommentResource::collection($this->comments),
-                ])
             ];
-            
         }
+        
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'isbn' => $this->isbn,
+            'publisher' => new PublisherResource($this->publisher),
+            'contributors' => [
+                'writers' => ContributorResource::collection($this->writers),
+                'translators' => ContributorResource::collection($this->translators),
+                'editors' => ContributorResource::collection($this->editors),
+            ],
+            'info' => $info
+        ];
         
     }
     
+}

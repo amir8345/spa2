@@ -29,15 +29,22 @@ Route::middleware('auth:sanctum')->get('/profile' , function(){
 Route::get('/crawl' , [BookResources::class , 'extract_resource']);
 
 // book
-Route::get('/books' , [BookController::class , 'all_books']);
-Route::get('/book' , [BookController::class , 'one_book']);
+Route::get('/books/{order}/{page}' , [BookController::class , 'all'])
+->name('books');
+Route::get('/book/{book}' , [BookController::class , 'one'])
+->name('book');
 
 // contributor 
-Route::get('/contributors' , [ContributorController::class , 'all_contributors']);
-Route::get('/contributor' , [ContributorController::class , 'one_contributor']);
+Route::get('/contributors/{type}/{order}/{page}' , [ContributorController::class , 'all'])
+->name('contributors');
+Route::get('/contributor/{contributor}' , [ContributorController::class , 'one'])
+->name('contributor');
 
 // publisher
-Route::get('/publisher' , [PublisherController::class , 'one_publisher']);
+Route::get('/publishers/{order}/{page}' , [PublisherController::class , 'all'])
+->name('publishers');
+Route::get('/publisher/{publisher}' , [PublisherController::class , 'one'])
+->name('publisher');
 
 // like
 Route::post('/like' , [LikeController::class]);

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\User;
 use App\Http\Resources\RoleResource;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\PublisherResource AS tr;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,36 +18,31 @@ class PublisherResource extends JsonResource
     */
     public function toArray($request)
     {
+
+        $type = 'publisher';
+        $id = $this->id;
+
+        if ($this->user) {
+            $type = 'user';
+            $id = $this->user->user_id;
+        }
+
+        $info = null;
+
+        if ($request->routeIs('publisher')) {
+            $info = [
+                'books' => BookResource::collection($this->books),
+                'followers' => UserResource::collection($this->followers),
+            ];
+        }
         
         return [
-            'id' => $this->id,
+            'type' => $type,
+            'id' => $id,
             'name' => $this->name,
-            'books_num' => $this->books->count,
-            
-            $this->mergeWhen($request->path() == 'api/publisher', function(){
-
-                return [
-                    'followers' => RoleResource::collection($this->followers),
-                    
-                    $this->mergeWhen($this->user , function() {
-                  
-                        if (! $this->user) {
-                            return null;
-                        }
-                  
-                        return [ 
-                            'followings_user' => RoleResource::collection(User::find($this->user->user_id)->followings_user),
-                            'followings_publisher' => RoleResource::collection(User::find($this->user->user_id)->followings_publisher),
-                            
-                        ];
-                        
-                    }),
-                ];
-            }),
-            
-            
+            'info' => $info
+            // 'books_num' => $this->books->count(),
         ];
-        // info that should be displayed if publisher had signed in
         
     }
 }
