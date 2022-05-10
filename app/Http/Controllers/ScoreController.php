@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -18,4 +19,8 @@ class ScoreController extends Controller
         ] , ['user_id', 'book_id'] , ['score']);
 
     }
+
+  
+
+
 }

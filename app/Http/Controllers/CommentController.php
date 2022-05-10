@@ -65,12 +65,10 @@ class CommentController extends Controller
 
     public function show(Comment $comment)
     {
-        return [
-            'comment' =>  new CommentResource($comment),
-            'comments' => CommentResource::collection($comment->comments),
-            'parent' => new CommentParentResource($this->parent)
-        ];
+        return new CommentResource($comment);
     }
+
+
 
 
 }

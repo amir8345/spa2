@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Like;
 use App\Models\Comment AS Comment2;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,7 +26,11 @@ class Comment extends Model
         return $this->morphTo();
     }
 
-    
+    public function likes()
+    {
+        return $this->morphMany(Like::class , 'liked');
+    }
+
 
 
 }

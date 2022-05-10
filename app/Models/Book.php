@@ -72,10 +72,9 @@ class Book extends Model
         return $this->belongsToMany(Contributor::class)->wherePivot('action' , 'editor');
     }
 
-    public function score()
+    public function scores()
     {
-        return $this->hasMany(Score::class)->avg('score');
+        return $this->hasMany(Score::class);
     }
-
 
 }

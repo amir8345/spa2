@@ -58,4 +58,13 @@ class ShelfController extends Controller
 
     }
 
+    public function shelves()
+    {
+        $shelves = DB::table('shelves')
+        ->where('user_id' , request()->user()->id)
+        ->pluck('id' , 'name');
+
+        return $shelves->toJson();
+    }
+
 }

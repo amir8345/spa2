@@ -116,6 +116,26 @@ class BookController extends Controller
         
     }
 
+    public function scores(Book $book)
+    {
+        return $book->scores()
+        ->orderByRaw('user_id = ' . request()->user()->id . ' desc');
+    }
+
+    public function same_publisher_books(Book $book)
+    {
+        $publisher = $book->publisher;
+        return $publisher->books->limit(5)->get();
+    }
+
+    public function same_writer_books(Book $book)
+    {
+        $writers = $book->writers;
+
+        // $book = DB::table('books')->whereIn('id' , )
+
+        // return BookResource::collection(  )
+    }
 
 
 }

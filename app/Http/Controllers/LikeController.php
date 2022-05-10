@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
+use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +16,7 @@ class LikeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request)
+    public function toggle_like(Request $request)
     {
                 
         $user_data = [
@@ -30,4 +32,20 @@ class LikeController extends Controller
         
         DB::table('likes')->insert($user_data);
     }
+
+
+    public function lieks($type , $id)
+    {
+
+        $likers = DB::table('likes')
+        ->where('liked_type' , $type)
+        ->where('liked_id' , $id)
+        ->get();
+        
+        return UserResource::collection($likers);
+
+    }
+
+
+
 }

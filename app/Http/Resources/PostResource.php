@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\CommentResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PostResource extends JsonResource
@@ -21,6 +22,12 @@ class PostResource extends JsonResource
             'writer' => new UserResource($this->writer),
             'title' => $this->title,
             'body' => $this->body,
+            'likes_num' => $this->likes->count,
+            'comments_num' => $this->comments->count,
+            'comments' => $this->when(
+                request()->routeIs('post') , 
+                CommentResource::collection($this->comments) 
+            )
         ];
     }
 }

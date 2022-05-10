@@ -44,8 +44,9 @@ class BookResource extends JsonResource
                     'want_to_read' =>  $this->want_to_read(),
                     'had_read' =>  $this->had_read(),
                     'reading' =>  $this->reading(),
+                    'shelf_num' => $this->shelves->count
                 ],
-                'score' => round($this->score() , 1),
+                'score' => round($this->scores()->average('score') , 1),
                 'posts' => PostResource::collection($this->posts),
                 'comments' => CommentResource::collection($this->comments),
             ];
