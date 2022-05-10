@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Shelf;
+use App\Models\Publisher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\BookResource;
@@ -116,6 +117,7 @@ class BookController extends Controller
         
     }
 
+    // show readers who scored this book . show current user at the topp
     public function scores(Book $book)
     {
         return $book->scores()
@@ -133,9 +135,63 @@ class BookController extends Controller
         $writers = $book->writers;
 
         // $book = DB::table('books')->whereIn('id' , )
-
+        
         // return BookResource::collection(  )
+    }
+    
+    // show shelves that this book is inside them
+    public function shelves(Book $book)
+    {
+        return $book->shelves;
+    }
+    
+    
+    public function publisher_books(Publisher $publisher , $order , $page)
+    {
+        
+        $offset = ($page - 1 ) * 20;
+        
+        if ($order == 'date') {
+            $books = $publisher->books()
+            ->latest()
+            ->
+        }
+        
+        if ($order == 'alphabet') {
+            $books = $publisher->books
+            ->orderBy('name')
+        }
+   
+        if ($order == 'score') {
+            $books = DB::table('best_books_by_score')
+            ->whereIn('book_id' , $publisher->books->pluck('id')->toArray())
+        }
+
+        if ($order == 'read') {
+            $books = DB::table('most_popular_books')
+            ->whereIn('book_id' , $publisher->books->pluck('id')->toArray())
+        }
+
+
+
+        $books = Book::whereIn('id' , $requested_books_ids)
+        ->offset( ( $page - 1 ) * 20)
+        ->limit(20)
+        ->get();
+        
+        
+        return BookResource::collection($books);
+    }
+
+
+    public function get_books($order , $page)
+    {
+
+
+
+
     }
 
 
 }
+

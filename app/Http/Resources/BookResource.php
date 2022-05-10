@@ -54,15 +54,15 @@ class BookResource extends JsonResource
         
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'isbn' => $this->isbn,
-            'publisher' => new PublisherResource($this->publisher),
-            'contributors' => [
-                'writers' => ContributorResource::collection($this->writers),
-                'translators' => ContributorResource::collection($this->translators),
-                'editors' => ContributorResource::collection($this->editors),
-            ],
-            'info' => $info
+            // 'title' => $this->title,
+            // 'isbn' => $this->isbn,
+            // 'publisher' => new PublisherResource($this->publisher),
+            // 'contributors' => [
+            //     'writers' => ContributorResource::collection($this->writers),
+            //     'translators' => ContributorResource::collection($this->translators),
+            //     'editors' => ContributorResource::collection($this->editors),
+            // ],
+            // 'info' => $info
         ];
         
     }

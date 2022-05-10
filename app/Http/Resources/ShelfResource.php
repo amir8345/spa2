@@ -16,6 +16,8 @@ class ShelfResource extends JsonResource
     public function toArray($request)
     {
 
+        $books = null;
+
         if (request()->routeIs('library')) {
             $books = $this->books->limit(5)->get();
         }
@@ -24,12 +26,14 @@ class ShelfResource extends JsonResource
             $books = $this->books;
         }
 
+        $books = BookResource::collection($books);
+
         return [
             'id' => $this->id,
             'name' => $this->name,
             'num' => $this->books->count,
-            'books' => BookResource::collection($books),
+            'books' => $books
         ];
-        
+         
     }
 }

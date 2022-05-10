@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ShelfResource;
+use App\Models\User;
 use App\Models\Shelf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\ShelfResource;
 
 class ShelfController extends Controller
 {
@@ -46,25 +47,23 @@ class ShelfController extends Controller
 
     }
     
-    public function show(Shelf $shelf)
+    public function show(Shelf $shelf , $page)
     {
+
+        
+
         return new ShelfResource($shelf);
     }
 
-    public function library()
+    public function library(User $user)
     {
-        $user = request()->user();
         return ShelfResource::collection($user->shelves);
 
     }
 
     public function shelves()
     {
-        $shelves = DB::table('shelves')
-        ->where('user_id' , request()->user()->id)
-        ->pluck('id' , 'name');
-
-        return $shelves->toJson();
+        return ShelfResource::collection(request()->user()->shelves);
     }
 
 }

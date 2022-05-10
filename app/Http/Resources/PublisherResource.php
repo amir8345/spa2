@@ -31,7 +31,6 @@ class PublisherResource extends JsonResource
 
         if ($request->routeIs('publisher')) {
             $info = [
-                'books' => BookResource::collection($this->books),
                 'followers' => UserResource::collection($this->followers),
             ];
         }
@@ -40,8 +39,8 @@ class PublisherResource extends JsonResource
             'type' => $type,
             'id' => $id,
             'name' => $this->name,
-            'info' => $info
-            // 'books_num' => $this->books->count(),
+            'books_num' => $this->books->count(),
+            'info' => $info,
         ];
         
     }
