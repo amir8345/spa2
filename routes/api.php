@@ -11,6 +11,7 @@ use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ContributorController;
 use App\Http\Controllers\Crawler\BookResources;
 use App\Http\Controllers\ScoreController;
+use App\Models\Publisher;
 
 Route::post('/login' , [LoginController::class , 'login']);
 Route::get('/login/send_code' , [LoginController::class , 'send_code']);

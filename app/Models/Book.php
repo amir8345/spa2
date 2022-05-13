@@ -20,7 +20,6 @@ class Book extends Model
     {
         return $this->belongsTo(Publisher::class);
     }
-    
 
     public function shelves()
     {
@@ -49,12 +48,12 @@ class Book extends Model
     
     public function posts()
     {
-        return $this->morphMany(Post::class , 'reciever');
+        return $this->morphMany(Post::class , 'posted');
     }
 
     public function comments()
     {
-        return $this->morphMany(Comment::class , 'reciever');
+        return $this->morphMany(Comment::class , 'commented');
     }
 
     public function writers()
