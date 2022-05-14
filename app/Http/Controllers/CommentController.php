@@ -27,35 +27,33 @@ class CommentController extends Controller
 
     }
 
-    public function delete(Request $request)
+    public function delete(Comment $comment)
     {
-        $post = Comment::find($request->id);
 
-        if ($post->user_id != $request->user()->id) {
+        if ($comment->user_id != request()->user()->id) {
             return 'you are not authorized to delete';
         }
 
-        if ($post->delete() == 1) {
-            return 'deleted successfully';
+        if ($comment->delete() == 1) {
+            return 'comment deleted successfully';
         } 
 
         return 'something is wronge';
     }
 
 
-    public function update(Request $request)
+    public function update(Comment $comment)
     {
-        $post = Comment::find($request->id);
 
-        if ($post->user_id != $request->user()->id) {
+        if ($comment->user_id != request()->user()->id) {
             return 'you are not authorized to update';
         }
 
         $user_info = [
-            'body' => $request->body,
+            'body' => request()->body,
         ];
 
-        if ($post->update($user_info) == 1) {
+        if ($comment->update($user_info) == 1) {
             return 'updated successfully';
         }
 

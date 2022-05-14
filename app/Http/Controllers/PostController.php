@@ -30,11 +30,10 @@ class PostController extends Controller
 
     }
 
-    public function delete(Request $request)
+    public function delete(Post $post)
     {
-        $post = Post::find($request->id);
 
-        if ($post->user_id != $request->user()->id) {
+        if ($post->user_id != request()->user()->id) {
             return 'you are not authorized to delete';
         }
 
@@ -46,17 +45,16 @@ class PostController extends Controller
     }
 
 
-    public function update(Request $request)
+    public function update(Post $post)
     {
-        $post = Post::find($request->id);
 
-        if ($post->user_id != $request->user()->id) {
+        if ($post->user_id != request()->user()->id) {
             return 'you are not authorized to update';
         }
 
         $user_info = [
-            'title' => $request->title,
-            'body' => $request->body,
+            'title' => request()->title,
+            'body' => request()->body,
         ];
 
         if ($post->update($user_info) == 1) {

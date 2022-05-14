@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
 use App\Models\PublisherUser;
+use App\Models\BookContributor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -39,6 +40,10 @@ class Publisher extends Model
         return $this->hasOne(PublisherUser::class);
     }
    
+    public function contributors()
+    {
+        return $this->hasManyThrough(BookContributor::class , Book::class);
+    }
 
 
 }

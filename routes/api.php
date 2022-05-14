@@ -54,6 +54,8 @@ Route::get('/publishers/{order}/{page}' , [PublisherController::class , 'all'])
 ->name('publishers');
 Route::get('/publisher/{publisher}' , [PublisherController::class , 'one'])
 ->name('publisher');
+Route::get('/publisher/{publisher}/{contributor_type}' , [PublisherController::class , 'contributors']);
+
 
 // like
 Route::post('/like' , [LikeController::class , 'toggle_like']);
@@ -61,15 +63,15 @@ Route::get('/likes/{type}/{id}' , [LikeController::class , 'likes']);
 
 // post
 Route::post('/post/add' , [PostController::class , 'add']);
-Route::post('/post/delete' , [PostController::class , 'delete']);
-Route::post('/post/update' , [PostController::class , 'update']);
+Route::post('/post/delete/{post}' , [PostController::class , 'delete']);
+Route::post('/post/update/{post}' , [PostController::class , 'update']);
 Route::post('/post/show/{post}' , [PostController::class , 'show'])
 ->name('post');
 
 // comment
 Route::post('/comment/add' , [CommentController::class , 'add']);
-Route::post('/comment/delete' , [CommentController::class , 'delete']);
-Route::post('/comment/update' , [CommentController::class , 'update']);
+Route::post('/comment/delete/{comment}' , [CommentController::class , 'delete']);
+Route::post('/comment/update/{comment}' , [CommentController::class , 'update']);
 Route::post('/comment/show/{comment}' , [CommentController::class , 'show'])
 ->name('comment');
 

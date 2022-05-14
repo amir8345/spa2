@@ -40,6 +40,11 @@ class PublisherResource extends JsonResource
             'id' => $id,
             'name' => $this->name,
             'books_num' => $this->books->count(),
+            'contributors_num' => [
+                'writer' => $this->contributors->where('action' , 'writer')->count(),
+                'editor' => $this->contributors->where('action' , 'editor')->count(),
+                'translator' => $this->contributors->where('action' , 'translator')->count(),
+            ],
             'info' => $info,
         ];
         

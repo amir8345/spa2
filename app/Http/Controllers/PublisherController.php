@@ -15,9 +15,16 @@ class PublisherController extends Controller
         return PublisherResource::collection($publishers);
     }
 
-
     public function one(Publisher $publisher)
     {
         return new PublisherResource($publisher);
     }
+
+    public function contributors(Publisher $publisher , $contributor_type)
+    {
+        $contributors_ids = $publisher->contributors->where('action' , $contributor_type)->pluck('id');
+        // return MainContributor::whereIn('id' , $contributors_ids)->get();
+    }
+
+
 }
