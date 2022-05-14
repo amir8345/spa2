@@ -44,25 +44,25 @@ class BookResource extends JsonResource
                     'want_to_read' =>  $this->want_to_read(),
                     'had_read' =>  $this->had_read(),
                     'reading' =>  $this->reading(),
-                    'shelf_num' => $this->shelves->count
+                    'shelves' => $this->shelves->count(),
+                    'posts' => PostResource::collection($this->posts)->count(), 
+                    'comments' => CommentResource::collection($this->comments)->count(),
                 ],
                 'score' => round($this->scores()->average('score') , 1),
-                'posts' => PostResource::collection($this->posts),
-                'comments' => CommentResource::collection($this->comments),
             ];
         }
         
         return [
             'id' => $this->id,
-            // 'title' => $this->title,
-            // 'isbn' => $this->isbn,
-            // 'publisher' => new PublisherResource($this->publisher),
-            // 'contributors' => [
-            //     'writers' => ContributorResource::collection($this->writers),
-            //     'translators' => ContributorResource::collection($this->translators),
-            //     'editors' => ContributorResource::collection($this->editors),
-            // ],
-            // 'info' => $info
+            'title' => $this->title,
+            'isbn' => $this->isbn,
+            'publisher' => new PublisherResource($this->publisher),
+            'contributors' => [
+                'writers' => ContributorResource::collection($this->writers),
+                'translators' => ContributorResource::collection($this->translators),
+                'editors' => ContributorResource::collection($this->editors),
+            ],
+            'info' => $info
         ];
         
     }

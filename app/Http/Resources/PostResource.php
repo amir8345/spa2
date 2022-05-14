@@ -22,8 +22,8 @@ class PostResource extends JsonResource
             'writer' => new UserResource($this->writer),
             'title' => $this->title,
             'body' => $this->body,
-            'likes_num' => $this->likes->count,
-            'comments_num' => $this->comments->count,
+            'likes_num' => $this->likes->count(),
+            'comments_num' => $this->comments->count(),
             'comments' => $this->when(
                 request()->routeIs('post') , 
                 CommentResource::collection($this->comments) 

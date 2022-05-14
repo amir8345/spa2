@@ -16,23 +16,11 @@ class ShelfResource extends JsonResource
     public function toArray($request)
     {
 
-        $books = null;
-
-        if (request()->routeIs('library')) {
-            $books = $this->books->limit(5)->get();
-        }
-        
-        if (request()->routeIs('shelf')) {
-            $books = $this->books;
-        }
-
-        $books = BookResource::collection($books);
-
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'num' => $this->books->count,
-            'books' => $books
+            'creator' => new UserResource($this->user), 
+            'num' => $this->books->count(),
         ];
          
     }

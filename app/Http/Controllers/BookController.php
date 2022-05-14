@@ -8,6 +8,7 @@ use App\Models\Publisher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\BookResource;
+use App\Http\Resources\ShelfResource;
 
 
 class BookController extends Controller
@@ -68,6 +69,11 @@ class BookController extends Controller
         return new BookResource($book);
     }
     
+
+    public function show_shelves_(Type $var = null)
+    {
+        # code...
+    }
 
 
     public function add_to_shelf(Book $book , Shelf $shelf)
@@ -142,13 +148,13 @@ class BookController extends Controller
     // show shelves that this book is inside them
     public function shelves(Book $book)
     {
-        return $book->shelves;
+        return ShelfResource::collection($book->shelves);
     }
     
     
     public function publisher_books(Publisher $publisher , $order , $page)
     {
-        
+        /*
         $offset = ($page - 1 ) * 20;
         
         if ($order == 'date') {
@@ -181,6 +187,7 @@ class BookController extends Controller
         
         
         return BookResource::collection($books);
+        */
     }
 
 

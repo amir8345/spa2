@@ -51,7 +51,7 @@ class FollowController extends Controller
         ->update(['status' => $request->status]);
 
         if ($updated_follow != 1) {
-            return 'count not update follow status';
+            return 'could not update follow status';
         }
 
         return 'updated successfully';

@@ -23,7 +23,7 @@ class Comment extends Model
   
     public function parent()
     {
-        return $this->morphTo();
+        return $this->morphTo('commented');
     }
 
     public function likes()

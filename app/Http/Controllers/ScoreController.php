@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Score;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class ScoreController extends Controller
 {
-    public function add_score(Request $request)
+    public function add_or_update_score(Request $request)
     {
 
         DB::table('score')->upsert([
@@ -18,6 +19,15 @@ class ScoreController extends Controller
             'score' => $request->score
         ] , ['user_id', 'book_id'] , ['score']);
 
+    }
+
+    public function delete(Score $score)
+    {
+        if ($score->delete() != 1 ) {
+            return 'could not delete score from database';
+        }
+
+        return 'score deleted successfully';
     }
 
   

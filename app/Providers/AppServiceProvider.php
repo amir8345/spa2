@@ -30,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
             'contributor' => 'App\Models\Contributor',
             'shelf' => 'App\Models\Shelf',
             'publisher' => 'App\Models\Publisher',
+            'post' => 'App\Models\Post',
+            'comment' => 'App\Models\Comment',
         ]);
     }
 }

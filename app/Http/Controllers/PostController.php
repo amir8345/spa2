@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\PostResource;
+use App\Models\Book;
 use App\Models\Post;
+use App\Models\User;
+use App\Models\Publisher;
+use App\Models\Contributor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\CommentResource;
 
 class PostController extends Controller
 {
@@ -71,6 +75,32 @@ class PostController extends Controller
             'post' =>  new PostResource($post),
             'comments' => CommentResource::collection($post->comments),
         ];
+    }
+
+    public function get_posts($type , $id , $page)
+    {
+
+        $offset = ($page - 1 ) * 20;
+
+        if ($type == 'book') {
+            $model = Book::find($id);
+        }
+        if ($type == 'publisher') {
+            $model = Publisher::find($id);
+        }
+        if ($type == 'contributor') {
+            $model = Contributor::find($id);
+        }
+        if ($type == 'user') {
+            $model = User::find($id);
+        }
+
+        $posts = $model->posts()->offset($offset)->limit(20)->get();
+
+        return PostResource::collection($posts);
+
+
+
     }
 
 

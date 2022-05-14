@@ -32,6 +32,12 @@ class PublisherResource extends JsonResource
         if ($request->routeIs('publisher')) {
             $info = [
                 'followers' => UserResource::collection($this->followers),
+                'books_num' => $this->books->count(),
+                'contributors_num' => [
+                    'writer' => $this->contributors->where('action' , 'writer')->count(),
+                    'editor' => $this->contributors->where('action' , 'editor')->count(),
+                    'translator' => $this->contributors->where('action' , 'translator')->count(),
+                ],
             ];
         }
         
@@ -39,12 +45,6 @@ class PublisherResource extends JsonResource
             'type' => $type,
             'id' => $id,
             'name' => $this->name,
-            'books_num' => $this->books->count(),
-            'contributors_num' => [
-                'writer' => $this->contributors->where('action' , 'writer')->count(),
-                'editor' => $this->contributors->where('action' , 'editor')->count(),
-                'translator' => $this->contributors->where('action' , 'translator')->count(),
-            ],
             'info' => $info,
         ];
         

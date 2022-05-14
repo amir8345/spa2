@@ -11,6 +11,7 @@ use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ContributorController;
 use App\Http\Controllers\Crawler\BookResources;
 use App\Http\Controllers\ScoreController;
+use App\Http\Controllers\ShelfController;
 use App\Models\Publisher;
 
 Route::post('/login' , [LoginController::class , 'login']);
@@ -36,12 +37,12 @@ Route::get('/book/{book}' , [BookController::class , 'one'])
 ->name('book');
 Route::get('/book/{book}/scores' , [BookController::class , 'scores']);
 
-Route::post('/add_to_shelf/{shelf}/{book}' , [BookController::class , 'add_to_shelf']);
-Route::post('/remove_from_shelf/{shelf}/{book}' , [BookController::class , 'remove_from_shelf']);
-Route::post('/update_book_shelf/{shelf_from}/{shelf_to}/{book}' , [BookController::class , 'update_book_shelf']);
+Route::post('/book/{book}/add_to_shelf/{shelf}' , [BookController::class , 'add_to_shelf']);
+Route::post('/book/{book}/remove_from_shelf/{shelf}' , [BookController::class , 'remove_from_shelf']);
+Route::post('/book/{book}/update_book_shelf/{shelf_from}/{shelf_to}' , [BookController::class , 'update_book_shelf']);
 
 Route::get('/publisher/{publisher}/books/{order}/{page}' , [BookController::class , 'publisher_books']);
-
+Route::get('/book/{book}/shelves' , [BookController::class , 'shelves']);
 
 // contributor 
 Route::get('/contributors/{type}/{order}/{page}' , [ContributorController::class , 'all'])
@@ -67,12 +68,14 @@ Route::post('/post/delete/{post}' , [PostController::class , 'delete']);
 Route::post('/post/update/{post}' , [PostController::class , 'update']);
 Route::post('/post/show/{post}' , [PostController::class , 'show'])
 ->name('post');
+Route::get('/posts/{type}/{id}/{page}' , [PostController::class , 'get_posts']);
+
 
 // comment
 Route::post('/comment/add' , [CommentController::class , 'add']);
-Route::post('/comment/delete/{comment}' , [CommentController::class , 'delete']);
-Route::post('/comment/update/{comment}' , [CommentController::class , 'update']);
-Route::post('/comment/show/{comment}' , [CommentController::class , 'show'])
+Route::post('/comment/{comment}/delete' , [CommentController::class , 'delete']);
+Route::post('/comment/{comment}/update' , [CommentController::class , 'update']);
+Route::get('/comment/{comment}/show' , [CommentController::class , 'show'])
 ->name('comment');
 
 // shelf
@@ -83,7 +86,9 @@ Route::get('/shelf/{shelf}/show/{page}' , [ShelfController::class , 'show'])
 ->name('shelf');
 Route::get('/library/{user}' , [ShelfController::class , 'library'])
 ->name('library');
+Route::get('/user/{user}/shelves' , [ShelfController::class , 'shelves']);
 
 // score
-Route::post('/score' , [ScoreController::class , 'add_score']);
+Route::post('/score/add_or_update' , [ScoreController::class , 'add_or_update_score']);
+Route::post('/score/{score}/delete' , [ScoreController::class , 'delete']);
 

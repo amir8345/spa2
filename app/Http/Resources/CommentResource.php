@@ -20,11 +20,13 @@ class CommentResource extends JsonResource
             'id' => $this->id,
             'writer' => new UserResource($this->writer),
             'body' => $this->body,
-            'likes_num' => $this->likes->count,
-            'comments_num' => $this->comments->count,
+            'likes_num' => $this->likes->count(),
+            'comments_num' => $this->comments->count(),
             
             $this->mergeWhen(request()->routeIs('comment') , function() {
                 
+                $parent = null;
+
                 if ( get_class($this->parent) == 'App\Models\Post' ) {
                     $parent = new PostResource($this->parent);
                 }
@@ -37,7 +39,6 @@ class CommentResource extends JsonResource
                     'parent' => $parent,
                     'comments' => CommentResource::collection($this->comments)
                 ];
-
 
             })
         ];

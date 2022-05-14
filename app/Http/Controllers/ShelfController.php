@@ -50,8 +50,6 @@ class ShelfController extends Controller
     public function show(Shelf $shelf , $page)
     {
 
-        
-
         return new ShelfResource($shelf);
     }
 
