@@ -4,79 +4,41 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Shelf;
+use App\Models\MainBook;
 use App\Models\Publisher;
-use Illuminate\Http\Request;
+use App\Models\Contributor;
 use Illuminate\Support\Facades\DB;
-use App\Http\Resources\BookResource;
 use App\Http\Resources\ShelfResource;
-
+use App\Http\Resources\MainBookResource;
+use App\Http\Resources\ScoreResource;
 
 class BookController extends Controller
 {
-    public function all($order , $page)
+
+    public function get_books($order , $page)
     {
 
-        // most want_to_read and had_read books
-        if ($order == 'read' || $order == 'want') {
+        $offset = ($page - 1) * 20;
 
-            $requested_books = DB::table('most_popular_books')
-            ->select('book_id')
-            ->where('shelf_name' , $order)
-            ->orderByDesc('number') 
-            ->get();
-        }
-
-        // most comments_and_posts books
-        if ($order == 'dibated') {
-           
-            $requested_books = DB::table('most_dibated_books')
-            ->orderByDesc('num')
-            ->get();
-        }
-
-        // newest books
-        // TODO: we should write this code after book_publishes table has data
-        
-
-
-
-
-
-
-        // make orderByRaw string ready for sql
-        $requested_order = ' ';
-
-        foreach ($requested_books as $key => $value) {
-            
-            $requested_order .= 'id = ' . $value->book_id . ' DESC ';
-
-            if ($key != count($requested_books) - 1) {
-                $requested_order .= ' , ';
-            }
-        }
-
-        $books = Book::orderByRaw($requested_order)
-        ->offset( ( $page - 1 ) * 20)
+        $books = MainBook::orderByDesc($order)
+        ->offset($offset)
         ->limit(20)
         ->get();
 
-        return BookResource::collection($books);
+        return $books;
+
     }
 
 
-    public function one(Book $book)
+    public function one(MainBook $book)
     {
-        return new BookResource($book);
+        return new MainBookResource($book);
     }
     
 
-    public function show_shelves_(Type $var = null)
-    {
-        # code...
-    }
 
 
-    public function add_to_shelf(Book $book , Shelf $shelf)
+    public function add_to_shelf(MainBook $book , Shelf $shelf)
     {
         $new_book_shelf = DB::table('book_shelf')->insertGetId([
             'book_id' => $book->id,
@@ -92,7 +54,7 @@ class BookController extends Controller
     }
 
 
-    public function remove_from_shelf(Book $book , Shelf $shelf)
+    public function remove_from_shelf(MainBook $book , Shelf $shelf)
     {
         $book_shelf = DB::table('book_shelf')
         ->where('book_id' , $book->id)
@@ -107,7 +69,7 @@ class BookController extends Controller
     }
 
 
-    public function update_book_shelf(Book $book , Shelf $shelf_to , Shelf $shelf_from)
+    public function update_book_shelf(MainBook $book , Shelf $shelf_to , Shelf $shelf_from)
     {
 
         $updated_book_shelf = DB::table('book_shelf')
@@ -123,30 +85,33 @@ class BookController extends Controller
         
     }
 
-    // show readers who scored this book . show current user at the topp
-    public function scores(Book $book)
+    // show readers who scored this book and current user's score
+    public function scores(MainBook $book)
     {
-        return $book->scores()
-        ->orderByRaw('user_id = ' . request()->user()->id . ' desc');
+
+        // $current_user_score = request()->user()
+        //                     ->scores()
+        //                     ->where('book_id' , $book->id)
+        //                     ->value('score');
+
+        $scores = ScoreResource::collection($book->scores); 
+
+        return ['current_user_score' => '$current_user_score' , 'scores' => $scores];
     }
 
-    public function same_publisher_books(Book $book)
+    // TODO : wating for books tags to be completed
+    public function same_publisher_books(MainBook $book)
     {
-        $publisher = $book->publisher;
-        return $publisher->books->limit(5)->get();
     }
-
-    public function same_writer_books(Book $book)
+    public function same_writer_books(MainBook $book)
     {
-        $writers = $book->writers;
-
-        // $book = DB::table('books')->whereIn('id' , )
-        
-        // return BookResource::collection(  )
+    }
+    public function same_books()
+    {
     }
     
     // show shelves that this book is inside them
-    public function shelves(Book $book)
+    public function shelves(MainBook $book)
     {
         return ShelfResource::collection($book->shelves);
     }
@@ -154,50 +119,26 @@ class BookController extends Controller
     
     public function publisher_books(Publisher $publisher , $order , $page)
     {
-        /*
-        $offset = ($page - 1 ) * 20;
-        
-        if ($order == 'date') {
-            $books = $publisher->books()
-            ->latest()
-            ->
-        }
-        
-        if ($order == 'alphabet') {
-            $books = $publisher->books
-            ->orderBy('name')
-        }
-   
-        if ($order == 'score') {
-            $books = DB::table('best_books_by_score')
-            ->whereIn('book_id' , $publisher->books->pluck('id')->toArray())
-        }
+        $offset = ($page - 1) * 20;
 
-        if ($order == 'read') {
-            $books = DB::table('most_popular_books')
-            ->whereIn('book_id' , $publisher->books->pluck('id')->toArray())
-        }
-
-
-
-        $books = Book::whereIn('id' , $requested_books_ids)
-        ->offset( ( $page - 1 ) * 20)
+        $books = $publisher->books()
+        ->orderByDesc($order)
+        ->offset($offset)
         ->limit(20)
         ->get();
         
-        
-        return BookResource::collection($books);
-        */
+        return MainBookResource::collection($books);
+
     }
 
 
-    public function get_books($order , $page)
+    public function contributor_books(Contributor $contributor , $order , $page)
     {
-
-
-
-
+        return MainBookResource::collection($contributor->books);
     }
+
+
+ 
 
 
 }

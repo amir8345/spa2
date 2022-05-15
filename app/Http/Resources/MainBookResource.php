@@ -10,7 +10,7 @@ use App\Http\Resources\PublisherResource;
 use App\Http\Resources\ContributorResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BookResource extends JsonResource
+class MainBookResource extends JsonResource
 {
     /**
     * Transform the resource into an array.
@@ -41,14 +41,11 @@ class BookResource extends JsonResource
                 'about' => $this->about,
                 'tags' => TagResource::collection($this->tags),
                 'numbers' => [
-                    'want_to_read' =>  $this->want_to_read(),
-                    'had_read' =>  $this->had_read(),
-                    'reading' =>  $this->reading(),
+                    'want' =>  $this->want,
+                    'read' =>  $this->read,
+                    'reading' =>  $this->reading,
                     'shelves' => $this->shelves->count(),
-                    'posts' => PostResource::collection($this->posts)->count(), 
-                    'comments' => CommentResource::collection($this->comments)->count(),
                 ],
-                'score' => round($this->scores()->average('score') , 1),
             ];
         }
         
@@ -62,7 +59,8 @@ class BookResource extends JsonResource
                 'translators' => ContributorResource::collection($this->translators),
                 'editors' => ContributorResource::collection($this->editors),
             ],
-            'info' => $info
+            'info' => $info,
+            'score' => $this->score
         ];
         
     }

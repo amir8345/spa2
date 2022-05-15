@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\MainBook;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Shelf extends Model
 {
@@ -11,7 +12,7 @@ class Shelf extends Model
 
     public function books()
     {
-        return $this->belongsToMany(Book::class);
+        return $this->belongsToMany(MainBook::class , 'book_shelf' , 'shelf_id' , 'book_id');
     }
 
     public function user()

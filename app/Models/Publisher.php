@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\MainBook;
 use App\Models\PublisherUser;
 use App\Models\BookContributor;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ class Publisher extends Model
 
     public function books()
     {
-        return $this->hasMany(Book::class);
+        return $this->hasMany(MainBook::class);
     }
     
     public function posts()

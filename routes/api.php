@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->get('/profile' , function(){
 Route::get('/crawl' , [BookResources::class , 'extract_resource']);
 
 // book
-Route::get('/books/{order}/{page}' , [BookController::class , 'all'])
+Route::get('/books/{order}/{page}' , [BookController::class , 'get_books'])
 ->name('books');
 Route::get('/book/{book}' , [BookController::class , 'one'])
 ->name('book');
@@ -42,6 +42,7 @@ Route::post('/book/{book}/remove_from_shelf/{shelf}' , [BookController::class , 
 Route::post('/book/{book}/update_book_shelf/{shelf_from}/{shelf_to}' , [BookController::class , 'update_book_shelf']);
 
 Route::get('/publisher/{publisher}/books/{order}/{page}' , [BookController::class , 'publisher_books']);
+Route::get('/contributor/{contributor}/books/{order}/{page}' , [BookController::class , 'contributor_books']);
 Route::get('/book/{book}/shelves' , [BookController::class , 'shelves']);
 
 // contributor 

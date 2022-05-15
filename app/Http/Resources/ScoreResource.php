@@ -3,6 +3,9 @@
 namespace App\Http\Resources;
 
 use App\Models\Book;
+use App\Models\User;
+use App\Models\MainBook;
+use App\Http\Resources\MainBookResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ScoreResource extends JsonResource
@@ -16,7 +19,8 @@ class ScoreResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'book_id' => new BookResource( Book::find($this->book_id) ),
+            'user' => new UserResource( User::find($this->user_id) ),
+            'book' => new MainBookResource( MainBook::find($this->book_id) ),
             'score' => $this->score,
         ];
     }
