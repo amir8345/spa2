@@ -1,6 +1,6 @@
 SELECT books.* , 
 score_table.score , 
-debate_table.debate_num ,
+debate_table.debate ,
 popular_table.read ,
 popular_table.want ,
 popular_table.reading
@@ -15,7 +15,7 @@ ON books.id = score_table.book_id
 
 LEFT JOIN
 
-(SELECT book_id , SUM(num) AS debate_num from 
+(SELECT book_id , SUM(num) AS debate from 
 (SELECT posted_id AS book_id , COUNT(posted_id) AS num FROM posts WHERE posted_type = 'book' GROUP BY posted_id
 UNION ALL
  SELECT commented_id AS book_id , COUNT(commented_id) AS num FROM comments WHERE commented_type = 'book' GROUP BY commented_id) AS post_and_comment

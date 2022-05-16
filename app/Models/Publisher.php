@@ -16,35 +16,6 @@ class Publisher extends Model
 {
     use HasFactory;
 
-    public function books()
-    {
-        return $this->hasMany(MainBook::class);
-    }
-    
-    public function posts()
-    {
-        return $this->morphMany(Post::class, 'posted');
-    }
-   
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'commented');
-    }
-
-    public function followers()
-    {
-        return $this->morphToMany(User::class , 'following' , 'follows' , 'following_id' , 'follower_id');
-    }
-
-    public function user()
-    {
-        return $this->hasOne(PublisherUser::class);
-    }
-   
-    public function contributors()
-    {
-        return $this->hasManyThrough(BookContributor::class , Book::class);
-    }
 
 
 }

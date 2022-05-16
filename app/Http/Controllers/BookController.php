@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
 use App\Models\Shelf;
 use App\Models\MainBook;
 use App\Models\Publisher;
-use App\Models\Contributor;
+use App\Models\MainPublisher;
+use App\Models\MainContributor;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\ScoreResource;
 use App\Http\Resources\ShelfResource;
 use App\Http\Resources\MainBookResource;
-use App\Http\Resources\ScoreResource;
 
 class BookController extends Controller
 {
@@ -25,7 +25,7 @@ class BookController extends Controller
         ->limit(20)
         ->get();
 
-        return $books;
+        return MainBookResource::collection($books);
 
     }
 
@@ -117,7 +117,7 @@ class BookController extends Controller
     }
     
     
-    public function publisher_books(Publisher $publisher , $order , $page)
+    public function publisher_books(MainPublisher $publisher , $order , $page)
     {
         $offset = ($page - 1) * 20;
 
@@ -132,7 +132,7 @@ class BookController extends Controller
     }
 
 
-    public function contributor_books(Contributor $contributor , $order , $page)
+    public function contributor_books(MainContributor $contributor , $order , $page)
     {
         return MainBookResource::collection($contributor->books);
     }

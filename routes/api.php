@@ -46,17 +46,17 @@ Route::get('/contributor/{contributor}/books/{order}/{page}' , [BookController::
 Route::get('/book/{book}/shelves' , [BookController::class , 'shelves']);
 
 // contributor 
-Route::get('/contributors/{type}/{order}/{page}' , [ContributorController::class , 'all'])
+Route::get('/contributors/{type}/{order}/{page}' , [ContributorController::class , 'get_contributors'])
 ->name('contributors');
 Route::get('/contributor/{contributor}' , [ContributorController::class , 'one'])
 ->name('contributor');
 
 // publisher
-Route::get('/publishers/{order}/{page}' , [PublisherController::class , 'all'])
+Route::get('/publishers/{order}/{page}' , [PublisherController::class , 'get_publishers'])
 ->name('publishers');
 Route::get('/publisher/{publisher}' , [PublisherController::class , 'one'])
 ->name('publisher');
-Route::get('/publisher/{publisher}/{contributor_type}' , [PublisherController::class , 'contributors']);
+Route::get('/publisher/{publisher}/{contributor_type}/{order}/{page}' , [PublisherController::class , 'contributors']);
 
 
 // like

@@ -5,9 +5,10 @@ namespace App\Http\Resources;
 use App\Models\User;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\MainBookResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ContributorResource extends JsonResource
+class MainContributorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -30,6 +31,8 @@ class ContributorResource extends JsonResource
             'type' => $type,
             'id' => $id,
             'name' => $this->name,
+            'follower' => $this->follower,
+            'book' => $this->book ,
 
             $this->mergeWhen($request->routeIs('contibutor') , [
                 // info that should be displayed on contributor page only

@@ -8,7 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\PublisherResource AS tr;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PublisherResource extends JsonResource
+class MainPublisherResource extends JsonResource
 {
     /**
     * Transform the resource into an array.
@@ -31,7 +31,6 @@ class PublisherResource extends JsonResource
 
         if ($request->routeIs('publisher')) {
             $info = [
-                'followers' => UserResource::collection($this->followers),
                 'books_num' => $this->books->count(),
                 'contributors_num' => [
                     'writer' => $this->contributors->where('action' , 'writer')->count(),
@@ -45,6 +44,8 @@ class PublisherResource extends JsonResource
             'type' => $type,
             'id' => $id,
             'name' => $this->name,
+            'follower' => $this->follower,
+            'book' => $this->book,
             'info' => $info,
         ];
         

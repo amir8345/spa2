@@ -8,6 +8,8 @@ use App\Http\Resources\PostResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PublisherResource;
 use App\Http\Resources\ContributorResource;
+use App\Http\Resources\MainPublisherResource;
+use App\Http\Resources\MainContributorResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MainBookResource extends JsonResource
@@ -40,12 +42,6 @@ class MainBookResource extends JsonResource
                 'binding' => $this->binding,
                 'about' => $this->about,
                 'tags' => TagResource::collection($this->tags),
-                'numbers' => [
-                    'want' =>  $this->want,
-                    'read' =>  $this->read,
-                    'reading' =>  $this->reading,
-                    'shelves' => $this->shelves->count(),
-                ],
             ];
         }
         
@@ -53,14 +49,20 @@ class MainBookResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'isbn' => $this->isbn,
-            'publisher' => new PublisherResource($this->publisher),
+            'publisher' => new MainPublisherResource($this->publisher),
             'contributors' => [
-                'writers' => ContributorResource::collection($this->writers),
-                'translators' => ContributorResource::collection($this->translators),
-                'editors' => ContributorResource::collection($this->editors),
+                'writers' => MainContributorResource::collection($this->writers),
+                // 'translators' => MainContributorResource::collection($this->translators),
+                // 'editors' => MainContributorResource::collection($this->editors),
             ],
             'info' => $info,
-            'score' => $this->score
+            'score' => $this->score,
+            'numbers' => [
+                'want' =>  $this->want,
+                'read' =>  $this->read,
+                'reading' =>  $this->reading,
+                'shelves' => $this->shelves->count(),
+            ],
         ];
         
     }
