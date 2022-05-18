@@ -3,20 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\MainUser;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\MainUserResource;
 
 class UserController extends Controller
 {
-    public function all()
+ 
+    public function get_users($order , $page)
     {
-        $users = User::all();
-        return UserResource::collection($users);
+        $offset = ($page - 1) * 20;
+        
+        $users = MainUser::orderByDesc($order)
+        ->offset($offset)
+        ->limit(20)
+        ->get();
+        
+        return MainUserResource::collection($users);
     }
-
-    public function one(User $user)
+  
+    
+    public function one(MainUser $user)
     {
-        return new UserResource($user);   
+        return new MainUserResource($user);   
     }
 
 }

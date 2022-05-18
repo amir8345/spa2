@@ -12,7 +12,7 @@ use App\Http\Controllers\ContributorController;
 use App\Http\Controllers\Crawler\BookResources;
 use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\ShelfController;
-use App\Models\Publisher;
+use App\Http\Controllers\UserController;
 
 Route::post('/login' , [LoginController::class , 'login']);
 Route::get('/login/send_code' , [LoginController::class , 'send_code']);
@@ -23,12 +23,14 @@ Route::post('/login/update_password' , [LoginController::class , 'update_passwor
 Route::get('/login/disposable_code' , [LoginController::class , 'disposable_code']);
 Route::get('/login/logout' , [LoginController::class , 'logout']);
 
-Route::middleware('auth:sanctum')->get('/profile' , function(){
-    return 'profile page';
-});
 
 
 Route::get('/crawl' , [BookResources::class , 'extract_resource']);
+
+
+// user
+Route::get('/users/{order}/{page}' , [UserController::class , 'get_users']);
+Route::get('/user/{user}' , [UserController::class , 'one'])->name('user');
 
 // book
 Route::get('/books/{order}/{page}' , [BookController::class , 'get_books'])
