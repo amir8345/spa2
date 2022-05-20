@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Shelf;
+use App\Models\MainUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ShelfResource;
@@ -49,14 +50,13 @@ class ShelfController extends Controller
     
     public function show(Shelf $shelf , $page)
     {
-
         return new ShelfResource($shelf);
     }
 
     public function library(User $user)
-    {
-        return ShelfResource::collection($user->shelves);
-
+    {   
+        $main_user = MainUser::find($user->id);
+        return ShelfResource::collection($main_user->shelves);
     }
 
     public function shelves()

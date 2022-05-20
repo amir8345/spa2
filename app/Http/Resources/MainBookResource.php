@@ -24,6 +24,10 @@ class MainBookResource extends JsonResource
     {
         
         $info = null;
+        // $current_user_score = request()->user()
+        //                     ->scores()
+        //                     ->where('book_id' , $this->id)
+        //                     ->value('score');
         
         if ($request->routeIs('book')) {
             
@@ -42,6 +46,8 @@ class MainBookResource extends JsonResource
                 'binding' => $this->binding,
                 'about' => $this->about,
                 'tags' => TagResource::collection($this->tags),
+                // 'current_user_score' => $current_user_score,
+                
             ];
         }
         
@@ -52,16 +58,17 @@ class MainBookResource extends JsonResource
             'publisher' => new MainPublisherResource($this->publisher),
             'contributors' => [
                 'writers' => MainContributorResource::collection($this->writers),
-                // 'translators' => MainContributorResource::collection($this->translators),
-                // 'editors' => MainContributorResource::collection($this->editors),
+                'translators' => MainContributorResource::collection($this->translators),
+                'editors' => MainContributorResource::collection($this->editors),
             ],
             'info' => $info,
-            'score' => $this->score,
             'numbers' => [
                 'want' =>  $this->want,
                 'read' =>  $this->read,
                 'reading' =>  $this->reading,
+                'debate' => $this->debate,
                 'shelves' => $this->shelves->count(),
+                'score' => $this->score,
             ],
         ];
         

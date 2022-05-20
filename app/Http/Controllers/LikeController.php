@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
 use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\MainUserResource;
+use App\Models\MainUser;
 
 class LikeController extends Controller
 {
@@ -31,18 +33,21 @@ class LikeController extends Controller
         }
         
         DB::table('likes')->insert($user_data);
+        return 'liked successfully';
     }
 
 
-    public function lieks($type , $id)
+    public function likers($type , $id)
     {
 
-        $likers = DB::table('likes')
+        $likers_ids = DB::table('likes')
         ->where('liked_type' , $type)
         ->where('liked_id' , $id)
-        ->get();
-        
-        return UserResource::collection($likers);
+        ->pluck('user_id');
+
+        $likers = MainUser::whereIn('id' , $likers_ids->toArray())->get();
+
+        return MainUserResource::collection($likers);
 
     }
 

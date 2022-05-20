@@ -36,8 +36,6 @@ class BookController extends Controller
     }
     
 
-
-
     public function add_to_shelf(MainBook $book , Shelf $shelf)
     {
         $new_book_shelf = DB::table('book_shelf')->insertGetId([
@@ -89,11 +87,6 @@ class BookController extends Controller
     public function scores(MainBook $book)
     {
 
-        // $current_user_score = request()->user()
-        //                     ->scores()
-        //                     ->where('book_id' , $book->id)
-        //                     ->value('score');
-
         $scores = ScoreResource::collection($book->scores); 
 
         return ['current_user_score' => '$current_user_score' , 'scores' => $scores];
@@ -115,18 +108,45 @@ class BookController extends Controller
     {
         return ShelfResource::collection($book->shelves);
     }
+
+    // show books which are inside a shelf
+    public function shelf_books(Shelf $shelf , $order , $page)
+    {
+        $offset = ($page - 1) * 20;
+        
+        $asc_desc = 'desc';
+
+        if ($order == 'title') {
+            $asc_desc = 'asc';
+        }
+
+        $books = $shelf->books()
+        ->orderBy($order , $asc_desc)
+        ->offset($offset)
+        ->limit(20)
+        ->get();
+
+        return MainBookResource::collection($books);
+        
+    }
     
     
     public function publisher_books(MainPublisher $publisher , $order , $page)
     {
         $offset = ($page - 1) * 20;
+        
+        $asc_desc = 'desc';
+
+        if ($order == 'title') {
+            $asc_desc = 'asc';
+        }
 
         $books = $publisher->books()
-        ->orderByDesc($order)
+        ->orderBy($order , $asc_desc)
         ->offset($offset)
         ->limit(20)
         ->get();
-        
+
         return MainBookResource::collection($books);
 
     }
@@ -134,7 +154,21 @@ class BookController extends Controller
 
     public function contributor_books(MainContributor $contributor , $order , $page)
     {
-        return MainBookResource::collection($contributor->books);
+        $offset = ($page - 1) * 20;
+        
+        $asc_desc = 'desc';
+
+        if ($order == 'title') {
+            $asc_desc = 'asc';
+        }
+
+        $books = $contributor->books()
+        ->orderBy($order , $asc_desc)
+        ->offset($offset)
+        ->limit(20)
+        ->get();
+
+        return MainBookResource::collection($books);
     }
 
 

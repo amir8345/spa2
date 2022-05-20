@@ -50,12 +50,12 @@ class MainBook extends Model
 
     public function translators()
     {
-        return $this->belongsToMany(MainContributor::class , 'book_contributor', 'book_id')->wherePivot('action' , 'translator');
+        return $this->belongsToMany(MainContributor::class , 'book_contributor', 'book_id' , 'contributor_id')->wherePivot('action' , 'translator');
     }
 
     public function editors()
     {
-        return $this->belongsToMany(MainContributor::class , 'book_contributor', 'book_id')->wherePivot('action' , 'editor');
+        return $this->belongsToMany(MainContributor::class , 'book_contributor', 'book_id' , 'contributor_id')->wherePivot('action' , 'editor');
     }
 
     public function scores()

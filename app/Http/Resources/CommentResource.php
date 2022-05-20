@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\MainUserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CommentResource extends JsonResource
@@ -18,7 +19,11 @@ class CommentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'writer' => new UserResource($this->writer),
+            'writer' => new MainUserResource($this->writer),
+            'parent' => [
+                'type' => get_class($this->parent),
+                'id' => $this->parent->id
+            ],
             'body' => $this->body,
             'likes_num' => $this->likes->count(),
             'comments_num' => $this->comments->count(),

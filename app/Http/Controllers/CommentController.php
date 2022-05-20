@@ -2,14 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CommentParentResource;
+use App\Models\User;
 use App\Models\Comment;
+use App\Models\MainBook;
+use App\Models\MainUser;
 use Illuminate\Http\Request;
+use App\Models\MainPublisher;
+use App\Models\MainContributor;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\CommentParentResource;
 
 class CommentController extends Controller
 {
+
+    public function get_comments($type , $id , $page)
+    {
+
+        $offset = ($page - 1 ) * 20;
+
+        if ($type == 'book') {
+            $model = MainBook::find($id);
+        }
+        if ($type == 'publisher') {
+            $model = MainPublisher::find($id);
+        }
+        if ($type == 'contributor') {
+            $model = MainContributor::find($id);
+        }
+        if ($type == 'user') {
+            $model = MainUser::find($id);
+        }
+
+        $comments = $model->comments()->offset($offset)->limit(20)->get();
+
+        return CommentResource::collection($comments);
+    }
+
+
+
+
     public function add(Request $request)
     {
         $new_comment_id = DB::table('comments')->insertGetId([
@@ -67,6 +99,20 @@ class CommentController extends Controller
     }
 
 
+    public function comments_by(User $user , $page)
+    {
+        
+        $offset = ($page - 1 ) * 20;
+        $main_user = MainUser::find($user->id);
+    
+        $comments = $main_user->comments_by()
+        ->offset($offset)
+        ->limit(20)
+        ->get();
+
+        return CommentResource::collection($comments);
+
+    }
 
 
 }

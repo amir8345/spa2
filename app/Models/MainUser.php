@@ -21,12 +21,12 @@ class MainUser extends Model
         return $this->hasMany(Comment::class , 'user_id');
     }
 
-    public function posts_on()
+    public function posts()
     {
         return $this->morphMany(Post::class , 'posted');
     }
     
-    public function comments_on()
+    public function comments()
     {
         return $this->morphMany(Comment::class , 'commented');
     }
@@ -58,7 +58,7 @@ class MainUser extends Model
 
     public function shelves()
     {
-        return $this->hasMany(Shelf::class);
+        return $this->hasMany(Shelf::class , 'user_id');
     }
 
     public function publisher()

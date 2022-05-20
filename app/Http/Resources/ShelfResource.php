@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\BookResource;
+use App\Http\Resources\MainUserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ShelfResource extends JsonResource
@@ -19,7 +20,7 @@ class ShelfResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'creator' => new UserResource($this->user), 
+            'creator' => new MainUserResource($this->user), 
             'num' => $this->books->count(),
         ];
          

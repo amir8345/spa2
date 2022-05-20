@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ScoreResource;
 use App\Models\Book;
+use App\Models\MainUser;
+use App\Models\User;
 use App\Models\Score;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +31,15 @@ class ScoreController extends Controller
         }
 
         return 'score deleted successfully';
+    }
+
+    public function user_scores(User $user)
+    {
+        $main_user = MainUser::find($user->id);
+        $scores = $main_user->scores;
+
+        return ScoreResource::collection($scores);
+        
     }
 
   

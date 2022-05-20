@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\MainBook;
+use App\Models\MainUser;
 use App\Models\Publisher;
 use App\Models\Contributor;
 use Illuminate\Http\Request;
+use App\Models\MainPublisher;
+use App\Models\MainContributor;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\CommentResource;
@@ -83,25 +87,38 @@ class PostController extends Controller
         $offset = ($page - 1 ) * 20;
 
         if ($type == 'book') {
-            $model = Book::find($id);
+            $model = MainBook::find($id);
         }
         if ($type == 'publisher') {
-            $model = Publisher::find($id);
+            $model = MainPublisher::find($id);
         }
         if ($type == 'contributor') {
-            $model = Contributor::find($id);
+            $model = MainContributor::find($id);
         }
         if ($type == 'user') {
-            $model = User::find($id);
+            $model = MainUser::find($id);
         }
 
         $posts = $model->posts()->offset($offset)->limit(20)->get();
 
         return PostResource::collection($posts);
+    }
 
+    public function posts_by(User $user , $page)
+    {
+        $offset = ($page - 1 ) * 20;
 
+        $main_user = MainUser::find($user->id);
+    
+        $posts = $main_user->posts_by()
+        ->offset($offset)
+        ->limit(20)
+        ->get();
+
+        return PostResource::collection($posts);
 
     }
+  
 
 
 }
