@@ -74,7 +74,7 @@ Route::get('/likers/{type}/{id}' , [LikeController::class , 'likers']);
 Route::post('/post/add' , [PostController::class , 'add']);
 Route::post('/post/delete/{post}' , [PostController::class , 'delete']);
 Route::post('/post/update/{post}' , [PostController::class , 'update']);
-Route::post('/post/show/{post}' , [PostController::class , 'show'])
+Route::post('/post/{post}' , [PostController::class , 'show'])
 ->name('post');
 Route::get('/posts/{type}/{id}/{page}' , [PostController::class , 'get_posts']);
 Route::get('/user/{user}/posts/{page}' , [PostController::class , 'posts_by']);
@@ -84,7 +84,7 @@ Route::get('/user/{user}/posts/{page}' , [PostController::class , 'posts_by']);
 Route::post('/comment/add' , [CommentController::class , 'add']);
 Route::post('/comment/{comment}/delete' , [CommentController::class , 'delete']);
 Route::post('/comment/{comment}/update' , [CommentController::class , 'update']);
-Route::get('/comment/{comment}/show' , [CommentController::class , 'show'])
+Route::get('/comment/{comment}' , [CommentController::class , 'show'])
 ->name('comment');
 Route::get('/comments/{type}/{id}/{page}' , [CommentController::class , 'get_comments']);
 Route::get('/user/{user}/comments/{page}' , [CommentController::class , 'comments_by']);
@@ -93,7 +93,7 @@ Route::get('/user/{user}/comments/{page}' , [CommentController::class , 'comment
 Route::post('/shelf/add' , [ShelfController::class , 'add']);
 Route::post('/shelf/{shelf}/delete' , [ShelfController::class , 'delete']);
 Route::post('/shelf/{shelf}/update' , [ShelfController::class , 'update']);
-Route::get('/shelf/{shelf}/show/{page}' , [ShelfController::class , 'show'])
+Route::get('/shelf/{shelf}/{page}' , [ShelfController::class , 'show'])
 ->name('shelf');
 Route::get('/user/{user}/library' , [ShelfController::class , 'library'])
 ->name('library');
