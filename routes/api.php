@@ -49,7 +49,7 @@ Route::get('/shelf/{shelf}/books/{order}/{page}' , [BookController::class , 'she
 
 
 Route::get('/publisher/{publisher}/books/{order}/{page}' , [BookController::class , 'publisher_books']);
-Route::get('/contributor/{contributor}/books/{order}/{page}' , [BookController::class , 'contributor_books']);
+Route::get('/contributor/{contributor}/books/{type}/{order}/{page}' , [BookController::class , 'contributor_books']);
 Route::get('/book/{book}/shelves' , [BookController::class , 'shelves']);
 
 // contributor 

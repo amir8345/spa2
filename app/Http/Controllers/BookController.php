@@ -152,7 +152,7 @@ class BookController extends Controller
     }
 
 
-    public function contributor_books(MainContributor $contributor , $order , $page)
+    public function contributor_books(MainContributor $contributor , $type , $order , $page)
     {
         $offset = ($page - 1) * 20;
         
@@ -162,7 +162,7 @@ class BookController extends Controller
             $asc_desc = 'asc';
         }
 
-        $books = $contributor->books()
+        $books = $contributor->books($type)
         ->orderBy($order , $asc_desc)
         ->offset($offset)
         ->limit(20)

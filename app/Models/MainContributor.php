@@ -21,9 +21,9 @@ class MainContributor extends Model
         return $this->morphMany(Comment::class, 'commented');
     }
 
-    public function books()
+    public function books(string $type)
     {
-        return $this->belongsToMany(MainBook::class , 'book_contributor' , 'contributor_id' , 'book_id');
+        return $this->belongsToMany(MainBook::class , 'book_contributor' , 'contributor_id' , 'book_id')->wherePivot('action' , $type);
     }
 
     public function user()

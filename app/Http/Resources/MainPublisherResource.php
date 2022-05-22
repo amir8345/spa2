@@ -37,6 +37,7 @@ class MainPublisherResource extends JsonResource
                     'editor' => $this->contributors->where('action' , 'editor')->count(),
                     'translator' => $this->contributors->where('action' , 'translator')->count(),
                 ],
+                // 'social_medias' => $this->social_medias
             ];
         }
         

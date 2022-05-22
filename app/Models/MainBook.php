@@ -43,21 +43,13 @@ class MainBook extends Model
         return $this->morphMany(Comment::class , 'commented');
     }
 
-    public function writers()
+    public function contributors(string $type)
     {
-        return $this->belongsToMany(MainContributor::class , 'book_contributor' , 'book_id' , 'contributor_id')->wherePivot('action' , 'writer');
+        return $this
+        ->belongsToMany(MainContributor::class , 'book_contributor' , 'book_id' , 'contributor_id')
+        ->wherePivot('action' , $type);
     }
-
-    public function translators()
-    {
-        return $this->belongsToMany(MainContributor::class , 'book_contributor', 'book_id' , 'contributor_id')->wherePivot('action' , 'translator');
-    }
-
-    public function editors()
-    {
-        return $this->belongsToMany(MainContributor::class , 'book_contributor', 'book_id' , 'contributor_id')->wherePivot('action' , 'editor');
-    }
-
+    
     public function scores()
     {
         return $this->hasMany(Score::class , 'book_id');

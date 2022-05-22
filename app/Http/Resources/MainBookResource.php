@@ -23,6 +23,13 @@ class MainBookResource extends JsonResource
     public function toArray($request)
     {
         
+        $contributor_types = ['writer' , 'translator' , 'editor'];
+        
+        foreach ($contributor_types as $type) {
+            $contributors[$type] = MainContributorResource::collection($this->contributors($type)->get());
+        }
+
+
         $info = null;
         // $current_user_score = request()->user()
         //                     ->scores()
@@ -56,11 +63,7 @@ class MainBookResource extends JsonResource
             'title' => $this->title,
             'isbn' => $this->isbn,
             'publisher' => new MainPublisherResource($this->publisher),
-            'contributors' => [
-                'writers' => MainContributorResource::collection($this->writers),
-                'translators' => MainContributorResource::collection($this->translators),
-                'editors' => MainContributorResource::collection($this->editors),
-            ],
+            'contributors' => $contributors,
             'info' => $info,
             'numbers' => [
                 'want' =>  $this->want,
