@@ -26,10 +26,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Relation::enforceMorphMap([
             'book' => 'App\Models\MainBook',
-            'user' => 'App\Models\User',
-            'contributor' => 'App\Models\Contributor',
+            'user' => 'App\Models\MainUser',
+            'contributor' => 'App\Models\MainContributor',
             'shelf' => 'App\Models\Shelf',
-            'publisher' => 'App\Models\Publisher',
+            'publisher' => 'App\Models\MainPublisher',
             'post' => 'App\Models\Post',
             'comment' => 'App\Models\Comment',
         ]);

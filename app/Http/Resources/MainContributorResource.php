@@ -32,11 +32,12 @@ class MainContributorResource extends JsonResource
             'id' => $id,
             'name' => $this->name,
             'follower' => $this->follower,
-            'book' => $this->book ,
+            'book' => $this->book,
 
             $this->mergeWhen($request->routeIs('contibutor') , [
                 // info that should be displayed on contributor page only
-                // ...
+
+                'social_medias' => SocialMediaResource::collection($this->social_medias) 
 
             ]),
         ];

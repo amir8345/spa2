@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\SocialMedia;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MainUser extends Model
 {
@@ -69,6 +70,11 @@ class MainUser extends Model
     public function contributor()
     {
         return $this->hasOne(ContributorUser::class);
+    }
+
+    public function social_medias()
+    {
+        return $this->morphMany(SocialMedia::class , 'owner');
     }
 
 

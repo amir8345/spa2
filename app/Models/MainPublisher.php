@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Models\MainBook;
+use App\Models\SocialMedia;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MainPublisher extends Model
 {
@@ -40,7 +41,7 @@ class MainPublisher extends Model
 
     public function social_medias()
     {
-        return $this->morphMany('SocialMedia' , 'owner');
+        return $this->morphMany(SocialMedia::class , 'owner');
     }
    
 
