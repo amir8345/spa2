@@ -30,33 +30,10 @@ class MainBookResource extends JsonResource
         }
 
 
-        $info = null;
         // $current_user_score = request()->user()
         //                     ->scores()
         //                     ->where('book_id' , $this->id)
         //                     ->value('score');
-        
-        if ($request->routeIs('book')) {
-            
-            $info = [
-                'title2' => $this->title2,
-                'lang' => $this->lang,
-                'city' => $this->city,
-                'age' => $this->age,
-                'format' => $this->format,
-                'size' => $this->size,
-                'weight' => $this->weight,
-                'cover' => $this->cover,
-                'paper' => $this->paper,
-                'pages' => $this->pages,
-                'colorful' => $this->colorful,
-                'binding' => $this->binding,
-                'about' => $this->about,
-                'tags' => TagResource::collection($this->tags),
-                // 'current_user_score' => $current_user_score,
-                
-            ];
-        }
         
         return [
             'id' => $this->id,
@@ -64,7 +41,6 @@ class MainBookResource extends JsonResource
             'isbn' => $this->isbn,
             'publisher' => new MainPublisherResource($this->publisher),
             'contributors' => $contributors,
-            'info' => $info,
             'numbers' => [
                 'want' =>  $this->want,
                 'read' =>  $this->read,
@@ -73,6 +49,26 @@ class MainBookResource extends JsonResource
                 'shelves' => $this->shelves->count(),
                 'score' => $this->score,
             ],
+            $this->mergeWhen(request()->routeIs('book') , function() {
+                return [
+                    'title2' => $this->title2,
+                    'lang' => $this->lang,
+                    'city' => $this->city,
+                    'age' => $this->age,
+                    'format' => $this->format,
+                    'size' => $this->size,
+                    'weight' => $this->weight,
+                    'cover' => $this->cover,
+                    'paper' => $this->paper,
+                    'pages' => $this->pages,
+                    'colorful' => $this->colorful,
+                    'binding' => $this->binding,
+                    'about' => $this->about,
+                    'tags' => TagResource::collection($this->tags),
+                    // 'current_user_score' => $current_user_score,
+                    
+                ];
+            })
         ];
         
     }

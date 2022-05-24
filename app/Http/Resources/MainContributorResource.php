@@ -34,7 +34,7 @@ class MainContributorResource extends JsonResource
             'follower' => $this->follower,
             'book' => $this->book,
 
-            $this->mergeWhen($request->routeIs('contibutor') , [
+            $this->mergeWhen($request->routeIs('contributor') , [
                 // info that should be displayed on contributor page only
 
                 'social_medias' => SocialMediaResource::collection($this->social_medias) 

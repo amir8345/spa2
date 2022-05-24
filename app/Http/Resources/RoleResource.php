@@ -19,7 +19,7 @@ class RoleResource extends JsonResource
         
         $type = 'user';
 
-        if(get_class($this->resource) == 'App\Models\Publisher'){
+        if(get_class($this->resource) == 'App\Models\MainPublisher'){
             $type = 'publisher';
         }
         

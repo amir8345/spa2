@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Models\MainBook;
 use App\Models\SocialMedia;
+use App\Models\PublisherContributor;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Controllers\PublisherController;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -42,6 +44,11 @@ class MainPublisher extends Model
     public function social_medias()
     {
         return $this->morphMany(SocialMedia::class , 'owner');
+    }
+
+    public function contributors()
+    {
+        return $this->hasMany(PublisherContributor::class , 'publisher_id');
     }
    
 

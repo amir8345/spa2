@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PublisherResource;
 use App\Http\Resources\MainPublisherResource;
 use App\Http\Resources\MainContributorResource;
+use App\Models\PublisherContributor;
 
 class PublisherController extends Controller
 {
@@ -33,20 +34,23 @@ class PublisherController extends Controller
         return new MainPublisherResource($publisher);
     }
 
-    public function contributors(MainPublisher $publisher , $contributor_type , $order , $page)
+    public function contributors(MainPublisher $publisher , $type , $order , $page)
     {
 
         $offset = ($page - 1) * 20;
+        $asc_desc = 'desc';
 
-        $book_ids = $publisher->books->pluck('id');
+        if ($order == 'name') {
+            $asc_desc = 'asc';
+        }
 
-        $contributor_ids = DB::table('book_contributor')
-        ->whereIn('book_id' , $book_ids)
-        ->where('action' , $contributor_type)
+        $contributor_ids = $publisher
+        ->contributors()
+        ->where('action' , $type)
         ->pluck('contributor_id');
         
         $contributors = MainContributor::whereIn('id' , $contributor_ids->toArray())
-        ->orderByDesc($order)
+        ->orderBy($order , $asc_desc)
         ->offset($offset)
         ->limit(20)
         ->get();

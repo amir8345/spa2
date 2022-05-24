@@ -63,7 +63,7 @@ Route::get('/publishers/{order}/{page}' , [PublisherController::class , 'get_pub
 ->name('publishers');
 Route::get('/publisher/{publisher}' , [PublisherController::class , 'one'])
 ->name('publisher');
-Route::get('/publisher/{publisher}/{contributor_type}/{order}/{page}' , [PublisherController::class , 'contributors']);
+Route::get('/publisher/{publisher}/contributors/{type}/{order}/{page}' , [PublisherController::class , 'contributors']);
 
 
 // like
