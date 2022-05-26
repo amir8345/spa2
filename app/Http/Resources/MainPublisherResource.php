@@ -33,6 +33,7 @@ class MainPublisherResource extends JsonResource
             'id' => $id,
             'name' => $this->name,
             'follower' => $this->follower,
+            'book' => $this->book,
             $this->mergeWhen($request->routeIs('publisher') , function() {
                 
                 $contributor_types = ['writer' , 'translator' , 'editor'];

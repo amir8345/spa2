@@ -27,12 +27,19 @@ class MainContributorResource extends JsonResource
             $id = $this->user->user_id;
         }
 
+        $contributor_types = ['writer' , 'translator' , 'editor'];
+        
+        foreach ($contributor_types as $contributor_type) {
+            $numbers[$contributor_type] = $this->books($contributor_type)->count();
+        }
+
         return [
             'type' => $type,
             'id' => $id,
             'name' => $this->name,
             'follower' => $this->follower,
             'book' => $this->book,
+            'numbers' => $numbers,
 
             $this->mergeWhen($request->routeIs('contributor') , [
                 // info that should be displayed on contributor page only

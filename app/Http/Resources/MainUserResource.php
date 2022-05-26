@@ -22,17 +22,22 @@ class MainUserResource extends JsonResource
             'name' => $this->name,
             'book' => $this->book,
             'follower' => $this->follower,
-            $this->mergeWhen(request()->routeIs('user') , [
-                'numbers' => [
-                        'post' => $this->posts_by->count(),
-                        'comment' => $this->comments_by->count(),
-                        'score' => $this->scores->count(),
-                        'like' => $this->likes->count(),
-                ],
-                'social_medias' => SocialMediaResource::collection($this->social_medias) 
-            ])
-        ];
+            $this->mergeWhen(request()->routeIs('user') , function() {
                 
-        }
+                return [
+                    'post' => $this->posts_by->count(),
+                    'comment' => $this->comments_by->count(),
+                    'score' => $this->scores->count(),
+                    'like' => $this->likes->count(),
+                    'followings_user' => $this->followings_user()->count(),
+                    'followings_publisher' => $this->followings_publisher()->count(),
+                    'social_medias' => SocialMediaResource::collection($this->social_medias) 
+                ];
+                
+            }),
+
+        ];    
     }
+
+}
     

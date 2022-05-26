@@ -65,7 +65,7 @@ class MainBookResource extends JsonResource
                     'binding' => $this->binding,
                     'about' => $this->about,
                     'tags' => TagResource::collection($this->tags),
-                    // 'current_user_score' => $current_user_score,
+                    'current_user_score' => '$current_user_score',
                     
                 ];
             })

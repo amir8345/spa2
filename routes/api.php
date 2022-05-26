@@ -32,8 +32,6 @@ Route::get('/crawl' , [BookResources::class , 'extract_resource']);
 // user
 Route::get('/users/{order}/{page}' , [UserController::class , 'get_users']);
 Route::get('/user/{user}' , [UserController::class , 'one'])->name('user');
-Route::get('/user/{user}/followers/{page}' , [UserController::class , 'followers']);
-Route::get('/user/{user}/followings/{page}' , [UserController::class , 'followings']);
 
 // book
 Route::get('/books/{order}/{page}' , [BookController::class , 'get_books'])
@@ -63,7 +61,7 @@ Route::get('/publishers/{order}/{page}' , [PublisherController::class , 'get_pub
 ->name('publishers');
 Route::get('/publisher/{publisher}' , [PublisherController::class , 'one'])
 ->name('publisher');
-Route::get('/publisher/{publisher}/contributors/{type}/{order}/{page}' , [PublisherController::class , 'contributors']);
+Route::get('/publisher/{publisher}/contributors/{contributor_type}/{order}/{page}' , [PublisherController::class , 'contributors']);
 
 
 // like
@@ -108,4 +106,5 @@ Route::get('/user/{user}/scores/{page}' , [ScoreController::class , 'user_scores
 Route::post('/follow_add' , [FollowController::class , 'add']);
 Route::post('/follow_delete' , [FollowController::class , 'delete']);
 Route::post('/follow_update' , [FollowController::class , 'update']);
-
+Route::get('/{following_type}/{following_id}/followers/{page}' , [FollowController::class , 'followers']);
+Route::get('/{follower_id}/followings/{following_type}/{page}' , [FollowController::class , 'followings']);

@@ -14,7 +14,18 @@ class ContributorController extends Controller
 
         $offset = ($page - 1) * 20;
 
-        $contributors = MainContributor::orderByDesc($order)
+        $asc_desc = 'desc';
+
+        if ($order == 'name') {
+            $asc_desc = 'asc';
+        }
+
+        $contributor_ids = DB::table('book_contributor')
+        ->where('action' , $type)
+        ->pluck('contributor_id');
+
+        $contributors = MainContributor::whereIn('id' , $contributor_ids->toArray())
+        ->orderBy($order , $asc_desc)
         ->offset($offset)
         ->limit(20)
         ->get();

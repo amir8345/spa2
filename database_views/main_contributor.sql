@@ -1,18 +1,15 @@
-SELECT contributors.* , follow_table.follower , book_num_table.book
-
+SELECT contributors.* , contributor_user.user_id , user_followers_table.follower , book_num_table.book
 FROM contributors 
-
 LEFT JOIN
+contributor_user
+ON contributors.id = contributor_user.contributor_id
 
-(
-    SELECT following_id as contributor_id , COUNT(following_id) AS follower
-    FROM follows 
-    WHERE following_type = 'contributor' 
-    GROUP by following_id
-) 
-AS follow_table
+LEFT JOIN 
 
-ON contributors.id = follow_table.contributor_id
+(SELECT following_id AS user_id , COUNT(follower_id) AS follower
+FROM follows WHERE following_type = 'user' GROUP BY following_type , following_id) AS user_followers_table
+
+ON contributor_user.user_id = user_followers_table.user_id
 
 LEFT JOIN
 

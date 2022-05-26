@@ -34,7 +34,7 @@ class PublisherController extends Controller
         return new MainPublisherResource($publisher);
     }
 
-    public function contributors(MainPublisher $publisher , $type , $order , $page)
+    public function contributors(MainPublisher $publisher , $contributor_type , $order , $page)
     {
 
         $offset = ($page - 1) * 20;
@@ -46,7 +46,7 @@ class PublisherController extends Controller
 
         $contributor_ids = $publisher
         ->contributors()
-        ->where('action' , $type)
+        ->where('action' , $contributor_type)
         ->pluck('contributor_id');
         
         $contributors = MainContributor::whereIn('id' , $contributor_ids->toArray())

@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MainUser;
 use Illuminate\Http\Request;
+use App\Models\MainPublisher;
+use App\Models\MainContributor;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\MainUserResource;
+use App\Http\Resources\MainPublisherResource;
 
 class FollowController extends Controller
 {
@@ -55,7 +60,60 @@ class FollowController extends Controller
         }
 
         return 'updated successfully';
+    }
+
+
+    public function followers($following_type , $following_id , $page)
+    {
+        $offset = ($page - 1 ) * 20;
+
+        if ($following_type == 'publisher') {
+            $model = MainPublisher::find($following_id);
+        }
+        if ($following_type == 'user') {
+            $model = MainUser::find($following_id);
+        }
+
+        $followers = $model->followers()
+        ->offset($offset)
+        ->limit(20)
+        ->get();
+
+        return MainUserResource::collection($followers);
 
     }
+
+    public function followings($follower_id , $following_type , $page)
+    {
+        $offset = ($page - 1 ) * 20;
+
+        $user = MainUser::find($follower_id);
+
+
+        if ($following_type == 'user') {
+            
+            $followings = $user->followings_user()
+            ->offset($offset)
+            ->limit(20)
+            ->get();
+
+            return MainUserResource::collection($followings);
+
+        }
+
+        if ($following_type == 'publisher') {
+
+            $followings = $user->followings_publisher()
+            ->offset($offset)
+            ->limit(20)
+            ->get();
+
+            return MainPublisherResource::collection($followings);
+
+        }
+
+
+    }
+
 
 }

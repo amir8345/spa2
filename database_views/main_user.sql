@@ -23,7 +23,3 @@ GROUP BY shelves.user_id )
 AS book_in_shelves_table
 
 ON users.id = book_in_shelves_table.user_id
-
-WHERE id NOT IN (SELECT user_id FROM contributor_user)
-AND 
-id NOT IN (SELECT user_id FROM publisher_user)
