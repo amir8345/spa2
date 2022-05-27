@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\SocialMedia;
+use App\Models\LibraryLastUpdate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -75,6 +76,11 @@ class MainUser extends Model
     public function social_medias()
     {
         return $this->morphMany(SocialMedia::class , 'owner');
+    }
+
+    public function library_last_update()
+    {
+        return $this->hasOne(LibraryLastUpdate::class, 'user_id');
     }
 
 

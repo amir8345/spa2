@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Shelf;
 use App\Models\MainBook;
 use App\Models\Publisher;
+use Illuminate\Http\Request;
 use App\Models\MainPublisher;
 use App\Models\MainContributor;
 use Illuminate\Support\Facades\DB;
@@ -36,11 +37,12 @@ class BookController extends Controller
     }
     
 
-    public function add_to_shelf(MainBook $book , Shelf $shelf)
+    public function add_to_shelf(Request $request)
     {
+
         $new_book_shelf = DB::table('book_shelf')->insertGetId([
-            'book_id' => $book->id,
-            'shelf_id' => $shelf->id
+            'book_id' => $request->book_id,
+            'shelf_id' => $request->shelf_id
         ]);
 
         if (! $new_book_shelf) {
@@ -52,28 +54,28 @@ class BookController extends Controller
     }
 
 
-    public function remove_from_shelf(MainBook $book , Shelf $shelf)
+    public function remove_from_shelf(Request $request)
     {
-        $book_shelf = DB::table('book_shelf')
-        ->where('book_id' , $book->id)
-        ->when('shelf_id' , $shelf->id)
-        ->first();
+        $deleted_book_shelf = DB::table('book_shelf')
+        ->where('book_id' , $request->book_id)
+        ->where('shelf_id' , $request->shelf_id)
+        ->delete();
 
-        if ($book_shelf->delete() != 1) {
+        if ( $deleted_book_shelf != 1) {
             return 'could not delete book from shelf';
         }
 
-        return 'book deleleted from shelf successfully';
+        return 'book deleted from shelf successfully';
     }
 
 
-    public function update_book_shelf(MainBook $book , Shelf $shelf_to , Shelf $shelf_from)
+    public function update_book_status(Request $request)
     {
 
         $updated_book_shelf = DB::table('book_shelf')
-        ->where('book_id' , $book->id)
-        ->where('shelf_id' , $shelf_from->id)
-        ->update(['shelf_id' => $shelf_to]);
+        ->where('book_id' , $request->book_id)
+        ->where('shelf_id' , $request->shelf_from)
+        ->update(['shelf_id' => $request->shelf_to]);
 
         if ($updated_book_shelf != 1) {
             return 'could not update book status';

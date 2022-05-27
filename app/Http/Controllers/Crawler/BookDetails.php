@@ -41,7 +41,7 @@ class BookDetails extends Controller
         
         // $this->search_book_in_nl($book_details);
 
-        // Log::info(var_dump($book_details));
+        // ::info(var_dump($book_details));
         
     }
 

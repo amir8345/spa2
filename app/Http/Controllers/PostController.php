@@ -38,47 +38,43 @@ class PostController extends Controller
 
     }
 
-    public function delete(Post $post)
+    public function delete(Request $request)
     {
 
-        if ($post->user_id != request()->user()->id) {
-            return 'you are not authorized to delete';
-        }
-
-        if ($post->delete() == 1) {
-            return 'deleted successfully';
+        $post = Post::find($request->post_id);
+        
+        if ($post->delete() != 1) {
+            return 'could not delete post';
         } 
-
-        return 'something is wronge';
+        
+        return 'deleted successfully';
     }
-
-
-    public function update(Post $post)
+    
+    
+    public function update(Request $request)
     {
+        
+        $post = Post::find($request->post_id);
 
-        if ($post->user_id != request()->user()->id) {
-            return 'you are not authorized to update';
+        if ($request->has('title')) {
+            $user_info['title'] = $request->title;
+        }
+        
+        if ($request->has('body')) {
+            $user_info['body'] = $request->body;
         }
 
-        $user_info = [
-            'title' => request()->title,
-            'body' => request()->body,
-        ];
-
-        if ($post->update($user_info) == 1) {
-            return 'updated successfully';
+        if ($post->update($user_info) != 1) {
+            return 'could not update post';
         }
-
-        return 'something is wronge';
+        
+        return 'updated successfully';
     }
 
 
     public function show(Post $post)
     {
-        return [
-            'post' =>  new PostResource($post),
-            'comments' => CommentResource::collection($post->comments),
-        ];
+        return new PostResource($post);
     }
 
     public function get_posts($type , $id , $page)
@@ -118,7 +114,5 @@ class PostController extends Controller
         return PostResource::collection($posts);
 
     }
-  
-
 
 }

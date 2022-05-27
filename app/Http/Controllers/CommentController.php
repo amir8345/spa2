@@ -40,8 +40,6 @@ class CommentController extends Controller
     }
 
 
-
-
     public function add(Request $request)
     {
         $new_comment_id = DB::table('comments')->insertGetId([
@@ -59,37 +57,32 @@ class CommentController extends Controller
 
     }
 
-    public function delete(Comment $comment)
+    public function delete(Request $request)
     {
+        $comment = Comment::find($request->comment_id);
 
-        if ($comment->user_id != request()->user()->id) {
-            return 'you are not authorized to delete';
-        }
-
-        if ($comment->delete() == 1) {
-            return 'comment deleted successfully';
+        if ($comment->delete() != 1) {
+            return 'could not delete comment';
         } 
-
-        return 'something is wronge';
+        
+        return 'comment deleted successfully';
     }
 
 
-    public function update(Comment $comment)
+    public function update(Request $request)
     {
 
-        if ($comment->user_id != request()->user()->id) {
-            return 'you are not authorized to update';
-        }
+        $comment = Comment::find($request->comment_id);
 
         $user_info = [
-            'body' => request()->body,
+            'body' => $request->body,
         ];
 
-        if ($comment->update($user_info) == 1) {
-            return 'updated successfully';
+        if ($comment->update($user_info) != 1) {
+            return 'could not update comment';
         }
-
-        return 'something is wronge';
+        
+        return 'updated successfully';
     }
 
 

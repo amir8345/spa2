@@ -24,10 +24,13 @@ class ScoreController extends Controller
 
     }
 
-    public function delete(Score $score)
+    public function delete(Request $request)
     {
+
+        $score = Score::where('book_id' , $request->book_id)->first();
+       
         if ($score->delete() != 1 ) {
-            return 'could not delete score from database';
+            return 'could not delete score';
         }
 
         return 'score deleted successfully';

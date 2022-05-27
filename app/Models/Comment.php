@@ -11,6 +11,8 @@ class Comment extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['body'];
+
     public function comments()
     {
         return $this->morphMany(Comment2::class , 'commented');

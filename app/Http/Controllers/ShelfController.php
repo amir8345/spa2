@@ -26,29 +26,32 @@ class ShelfController extends Controller
 
     }
    
-    public function delete(Shelf $shelf)
+    public function delete(Request $request)
     {
 
+        $shelf = Shelf::find($request->shelf_id);
+        
         if ($shelf->delete() != 1) {
-            return 'something is wrong';
+            return 'could not delete shelf';
         }
-
+        
         return 'deleted successfully';
-
+        
     }
     
-    public function update(Shelf $shelf)
+    public function update(Request $request)
     {
-
-        if ($shelf->update(['name' => request()->name]) != 1) {
-            return 'something is wrong';
+        $shelf = Shelf::find($request->shelf_id);
+        
+        if ($shelf->update(['name' => $request->name]) != 1) {
+            return 'could not update shelf';
         }
 
         return 'updated successfully';
 
     }
     
-    public function show(Shelf $shelf , $page)
+    public function show(Shelf $shelf)
     {
         return new ShelfResource($shelf);
     }
@@ -56,8 +59,13 @@ class ShelfController extends Controller
     public function library(User $user)
     {   
         $main_user = MainUser::find($user->id);
-        return ShelfResource::collection($main_user->shelves);
+
+        return [
+            'library' => ShelfResource::collection($main_user->shelves),
+            'last_update' => $main_user->library_last_update->last_update
+        ];
     }
+      
 
     public function shelves()
     {
