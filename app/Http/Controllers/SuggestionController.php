@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SuggestionResource;
+use App\Models\MainUser;
 use App\Models\Suggestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -65,6 +67,14 @@ class SuggestionController extends Controller
         return 'updated successfully';
         
     }
+    
 
+    public function all(MainUser $user , $page)
+    {
+        $offset = ($page - 1) * 20;
+
+        $suggestions = $user->suggestions()->offset($offset)->limit(20)->get();
+        return SuggestionResource::collection($suggestions);
+    }
 
 }

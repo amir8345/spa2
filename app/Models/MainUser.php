@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Suggestion;
 use App\Models\SocialMedia;
 use App\Models\LibraryLastUpdate;
 use Illuminate\Database\Eloquent\Model;
@@ -83,6 +84,10 @@ class MainUser extends Model
         return $this->hasOne(LibraryLastUpdate::class, 'user_id');
     }
 
+    public function suggestions()
+    {
+        return $this->hasMany(Suggestion::class , 'user_id');
+    }
 
 }
 

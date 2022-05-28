@@ -124,3 +124,4 @@ Route::get('/{follower_id}/followings/{following_type}/{page}' , [FollowControll
 Route::post('/suggestion/add' , [SuggestionController::class , 'add']);
 Route::post('/suggestion/delete' , [SuggestionController::class , 'delete']);
 Route::post('/suggestion/update' , [SuggestionController::class , 'update']);
+Route::get('/user/{user}/suggestions/{page}' , [SuggestionController::class , 'all']);
